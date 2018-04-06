@@ -1,7 +1,40 @@
-﻿
-@{
-    ViewBag.Title = "Index";
-}
-
-<h2>Index</h2>
-
+﻿<div class="col-12">
+    <div class="card text-white bg-primary mb-3" style="width:100%">
+        <div class="card-body">
+            <div class="row" data-bind="visible: CargandoPacientes">
+                <h3 class="card-title">
+                    <span class="fa fa-2x fa-spinner"></span>
+                    Cargando
+                </h3>
+            </div>
+            <div class="row" data-bind="visible: !CargandoPacientes()">
+                <nav class="navbar" style="padding-left: 0px;">
+                    <form class="form-inline">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">
+                        <button class="btn  my-2 my-sm-0 mr-sm-2" type="button">Buscar</button>
+                        <button class="btn  my-2 my-sm-0 mr-sm-2" type="button"><span class="fa fa-plus-circle"></span></button>
+                        <button class="btn  my-2 my-sm-0" type="button" data-bind="click: recargarPacientes"><span class="fa fa-retweet"></span></button>
+                    </form>
+                </nav>
+                <table class="table table-hover table-sm ">
+                    <thead>
+                        <tr class="text-white bg-dark">
+                            <th scope="col">#</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Direccion</th>
+                            <th scope="col">Telefono</th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: Pacientes">
+                        <tr>
+                            <th scope="row"><button class="btn  my-2 my-sm-0 fa fa-edit" type="button"></button></th>
+                            <td data-bind="text: Nombre"></td>
+                            <td data-bind="text: Direccion"></td>
+                            <td data-bind="text: Telefono"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

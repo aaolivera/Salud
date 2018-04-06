@@ -69,19 +69,79 @@ function Zona(datos) {
 function viewModel() {
     var self = this;
     self.MostrarPacientes = ko.observable(false);
+    self.MostrarProfesionales = ko.observable(false);
+    self.MostrarEmpresas = ko.observable(false);
 
-    self.Pacientes = ko.observableArray();
+    self.CargandoPacientes = ko.observable(true);
+    self.CargandoProfesionales = ko.observable(true);
+    self.CargandoEmpresas = ko.observable(true);
 
+    self.Pacientes = ko.observableArray([]);
+    self.Profesionales = ko.observableArray([]);
+    self.Empresas = ko.observableArray([]);
 
-    self.listarPacientes = function() {
-        $.getJSON(urllistarPacientes, function (data) {
-            self.MostrarPacientes(true);
-            data.forEach(function (entry) {
-                console.log(entry);
+    self.listarPacientes = function () {
+        self.MostrarPacientes(true);
+        self.MostrarProfesionales(false);
+        self.MostrarEmpresas(false);
+        if (self.CargandoPacientes()) {
+            $.getJSON(urllistarPacientes, function (data) {
+                temp = [];
+                data.forEach(function (entry) {
+                    temp.push(new Paciente(entry));           
+                });
+                self.Pacientes(temp);
+                self.CargandoPacientes(false);
             });
-        });
+        }
     }
 
+    self.listarProfesionales = function () {
+        self.MostrarPacientes(false);
+        self.MostrarProfesionales(true);
+        self.MostrarEmpresas(false);
+        if (self.CargandoProfesionales()) {
+            $.getJSON(urllistarProfesionales, function (data) {
+                temp = [];
+                data.forEach(function (entry) {
+                    temp.push(new Profecional(entry));
+                });
+                self.Profesionales(temp);
+                self.CargandoProfesionales(false);
+            });
+        }
+    }
+
+    self.listarEmpresas = function () {
+        self.MostrarPacientes(false);
+        self.MostrarProfesionales(false);
+        self.MostrarEmpresas(true);
+        if (self.CargandoEmpresas()) {
+            $.getJSON(urllistarEmpresas, function (data) {
+                temp = [];
+                data.forEach(function (entry) {
+                    temp.push(new Empresa(entry));
+                });
+                self.Empresas(temp);
+                self.CargandoEmpresas(false);
+            });
+        }        
+    }
+
+    self.recargarEmpresas = function () {
+        self.CargandoEmpresas(true);
+        self.listarEmpresas();
+    }
+
+    self.recargarProfesionales = function () {
+        self.CargandoProfesionales(true);
+        self.listarProfesionales();
+    }
+
+    self.recargarPacientes = function () {
+        self.CargandoPacientes(true);
+        self.listarPacientes();
+    }
 }
 
 $(document).ready(function () {

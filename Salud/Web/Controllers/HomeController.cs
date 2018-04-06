@@ -22,10 +22,19 @@ namespace Web.Controllers
             return View();
         }
 
-        public JsonResult Listar()
+        public JsonResult ListarPacientes()
         {
             return Json(Repositorio.Listar<Paciente>(), JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult ListarProfesionales()
+        {
+            return Json(Repositorio.Listar<Profecional>(), JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult ListarEmpresas()
+        {
+            return Json(Repositorio.Listar<Empresa>(), JsonRequestBehavior.AllowGet);
+        }
     }
 }
