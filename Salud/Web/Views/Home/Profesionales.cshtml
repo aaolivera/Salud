@@ -1,4 +1,4 @@
-﻿<div class="col-12">
+﻿<div class="col-12" data-bind="visible: Visible">
     <div class="card text-white bg-info mb-3" style="width:100%">
         <div class="card-body">
             <div class="row" data-bind="visible: CargandoProfesionales">
@@ -13,7 +13,7 @@
                         <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">
                         <button class="btn  my-2 my-sm-0 mr-sm-2" type="button">Buscar</button>
                         <button class="btn  my-2 my-sm-0 mr-sm-2" type="button"><span class="fa fa-plus-circle"></span></button>
-                        <button class="btn  my-2 my-sm-0" type="button" data-bind="click: recargarProfesionales"><span class="fa fa-retweet"></span></button>
+                        <button class="btn  my-2 my-sm-0" type="button" data-bind="click: RecargarProfesionales"><span class="fa fa-retweet"></span></button>
                     </form>
                 </nav>
                 <table class="table table-hover table-sm ">
@@ -21,6 +21,7 @@
                         <tr class="text-white bg-dark">
                             <th scope="col">#</th>
                             <th scope="col">Nombre</th>
+                            <th scope="col">Apellido</th>
                             <th scope="col">Direccion</th>
                             <th scope="col">Telefono</th>
                         </tr>
@@ -29,6 +30,7 @@
                         <tr>
                             <th scope="row"><button class="btn  my-2 my-sm-0 fa fa-edit" type="button"></button></th>
                             <td data-bind="text: Nombre"></td>
+                            <td data-bind="text: Apellido"></td>
                             <td data-bind="text: Direccion"></td>
                             <td data-bind="text: Telefono"></td>
                         </tr>

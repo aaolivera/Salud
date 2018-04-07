@@ -1,14 +1,14 @@
 ﻿function Paciente(datos) {
     var self = this;
     self.Nombre = ko.observable(datos.Nombre);
-    //self.Apellido = ko.observable(datos.Apellido);
-    //self.Direccion = ko.observable(datos.Direccion);
-    //self.Dni = ko.observable(datos.Dni);
-    //self.Telefono = ko.observable(datos.Telefono);
-    //self.Contacto = ko.observable(datos.Contacto);
-    //self.ContactoTelefono = ko.observable(datos.ContactoTelefono);
-    //self.Empresa = ko.observable(datos.Empresa);
-    //self.Zona = ko.observable(datos.Zona);
+    self.Apellido = ko.observable(datos.Apellido);
+    self.Direccion = ko.observable(datos.Direccion);
+    self.Dni = ko.observable(datos.Dni);
+    self.Telefono = ko.observable(datos.Telefono);
+    self.Contacto = ko.observable(datos.Contacto);
+    self.ContactoTelefono = ko.observable(datos.ContactoTelefono);
+    self.Empresa = ko.observable(datos.Empresa);
+    self.Zona = ko.observable(datos.Zona);
 
     //self.Prestaciones = ko.observableArray(datos.Prestaciones);
 }
@@ -66,40 +66,43 @@ function Zona(datos) {
 
 
 
-function viewModel() {
+function PacientesViewModel(viewModel) {
     var self = this;
-    self.MostrarPacientes = ko.observable(false);
-    self.MostrarProfesionales = ko.observable(false);
-    self.MostrarEmpresas = ko.observable(false);
-
-    self.CargandoPacientes = ko.observable(true);
-    self.CargandoProfesionales = ko.observable(true);
-    self.CargandoEmpresas = ko.observable(true);
-
     self.Pacientes = ko.observableArray([]);
-    self.Profesionales = ko.observableArray([]);
-    self.Empresas = ko.observableArray([]);
-
-    self.listarPacientes = function () {
-        self.MostrarPacientes(true);
-        self.MostrarProfesionales(false);
-        self.MostrarEmpresas(false);
-        if (self.CargandoPacientes()) {
+    self.CargandoPacientes = ko.observable(true);
+    self.Visible = ko.observable(false);
+    self.ListarPacientes = function () {
+        mostrar();
+        if (self.CargandoPacientes()) {           
             $.getJSON(urllistarPacientes, function (data) {
                 temp = [];
                 data.forEach(function (entry) {
-                    temp.push(new Paciente(entry));           
+                    temp.push(new Paciente(entry));
                 });
                 self.Pacientes(temp);
                 self.CargandoPacientes(false);
             });
         }
     }
+    self.RecargarPacientes = function () {
+        self.CargandoPacientes(true);
+        self.ListarPacientes();
+    }
+    
+    function mostrar() {
+        self.Visible(true);
+        viewModel.ProfesionalesViewModel.Visible(false);
+        viewModel.EmpresasViewModel.Visible(false);
+    }
+}
 
-    self.listarProfesionales = function () {
-        self.MostrarPacientes(false);
-        self.MostrarProfesionales(true);
-        self.MostrarEmpresas(false);
+function ProfesionalesViewModel(viewModel) {
+    var self = this;
+    self.Profesionales = ko.observableArray([]);
+    self.CargandoProfesionales = ko.observable(true);
+    self.Visible = ko.observable(false);
+    self.ListarProfesionales = function () {
+        mostrar();
         if (self.CargandoProfesionales()) {
             $.getJSON(urllistarProfesionales, function (data) {
                 temp = [];
@@ -111,11 +114,25 @@ function viewModel() {
             });
         }
     }
+    self.RecargarProfesionales = function () {
+        self.CargandoProfesionales(true);
+        self.ListarProfesionales();
+    }
+    
+    function mostrar() {
+        self.Visible(true);
+        viewModel.PacientesViewModel.Visible(false);
+        viewModel.EmpresasViewModel.Visible(false);
+    }
+}
 
-    self.listarEmpresas = function () {
-        self.MostrarPacientes(false);
-        self.MostrarProfesionales(false);
-        self.MostrarEmpresas(true);
+function EmpresasViewModel(viewModel) {
+    var self = this;
+    self.CargandoEmpresas = ko.observable(true);
+    self.Visible = ko.observable(false);
+    self.Empresas = ko.observableArray([]);
+    self.ListarEmpresas = function () {
+        mostrar();
         if (self.CargandoEmpresas()) {
             $.getJSON(urllistarEmpresas, function (data) {
                 temp = [];
@@ -125,23 +142,26 @@ function viewModel() {
                 self.Empresas(temp);
                 self.CargandoEmpresas(false);
             });
-        }        
+        }
     }
-
-    self.recargarEmpresas = function () {
+    self.RecargarEmpresas = function () {
         self.CargandoEmpresas(true);
-        self.listarEmpresas();
+        self.ListarEmpresas();
     }
+    
+    function mostrar() {
+        self.Visible(true);
+        viewModel.ProfesionalesViewModel.Visible(false);
+        viewModel.PacientesViewModel.Visible(false);
+    }
+}
 
-    self.recargarProfesionales = function () {
-        self.CargandoProfesionales(true);
-        self.listarProfesionales();
-    }
-
-    self.recargarPacientes = function () {
-        self.CargandoPacientes(true);
-        self.listarPacientes();
-    }
+function viewModel() {
+    var self = this;
+    self.PacientesViewModel = new PacientesViewModel(self);
+    self.ProfesionalesViewModel = new ProfesionalesViewModel(self);
+    self.EmpresasViewModel = new EmpresasViewModel(self);
+    
 }
 
 $(document).ready(function () {

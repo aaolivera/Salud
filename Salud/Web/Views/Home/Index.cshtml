@@ -14,8 +14,8 @@
 
 
 <div class="row">
-    <div class="col-lg-4 col-md-6 col-sm-12">
-        <button type="button" class="btn card text-white bg-primary mb-3" style="width:100%" data-bind="click: listarPacientes">
+    <div class="col-lg-4 col-md-6 col-sm-12" data-bind="with: PacientesViewModel">
+        <button type="button" class="btn card text-white bg-primary mb-3" style="width:100%" data-bind="click: ListarPacientes">
             <div class="card-body">
                 <h3 class="card-title">
                     <span class="fa fa-2x fa-address-book"></span>
@@ -25,8 +25,8 @@
             </div>
         </button>
     </div>
-    <div class="col-lg-4 col-md-6  col-sm-12">
-        <button type="button" class="btn card text-white bg-info mb-3" style="width:100%" data-bind="click: listarProfesionales">
+    <div class="col-lg-4 col-md-6  col-sm-12"  data-bind="with: ProfesionalesViewModel">
+        <button type="button" class="btn card text-white bg-info mb-3" style="width:100%" data-bind="click: ListarProfesionales">
             <div class="card-body">
                 <h3 class="card-title">
                     <span class="fa fa-2x fa-user-md"></span>
@@ -36,8 +36,8 @@
             </div>
         </button>
     </div>
-    <div class="col-lg-4 col-md-6  col-sm-12">
-        <button type="button" class="btn card text-white bg-success mb-3" style="width:100%" data-bind="click: listarEmpresas">
+    <div class="col-lg-4 col-md-6  col-sm-12" data-bind="with: EmpresasViewModel">
+        <button type="button" class="btn card text-white bg-success mb-3" style="width:100%" data-bind="click: ListarEmpresas">
             <div class="card-body">
                 <h3 class="card-title">
                     <span class="fa fa-2x fa-building"></span>
@@ -48,12 +48,13 @@
         </button>
     </div>
 </div>
-<div class="row" data-bind="visible: MostrarPacientes">
+@*<div class="row" data-bind="visible: MostrarPacientes">*@
+<div class="row" data-bind="with: PacientesViewModel">
     @Html.Partial("Pacientes")
 </div>
-<div class="row" data-bind="visible: MostrarProfesionales">
+<div class="row" data-bind="with: ProfesionalesViewModel">
     @Html.Partial("Profesionales")
 </div>
-<div class="row" data-bind="visible: MostrarEmpresas">
+<div class="row" data-bind="with: EmpresasViewModel">
     @Html.Partial("Empresas")
 </div>
