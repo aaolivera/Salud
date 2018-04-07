@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Dominio.Entidades
 {
-    public class Profecional
+    public class Profesional
     {
         [Key]
         public int Id { get; set; }

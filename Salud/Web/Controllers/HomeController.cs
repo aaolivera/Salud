@@ -29,12 +29,42 @@ namespace Web.Controllers
 
         public JsonResult ListarProfesionales()
         {
-            return Json(Repositorio.Listar<Profecional>(), JsonRequestBehavior.AllowGet);
+            return Json(Repositorio.Listar<Profesional>(), JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult ListarEmpresas()
         {
             return Json(Repositorio.Listar<Empresa>(), JsonRequestBehavior.AllowGet);
+        }
+
+        public void CrearPaciente(Paciente paciente)
+        {
+            if (!Repositorio.Existe<Paciente>(x => x.Dni == paciente.Dni))
+            {
+                Repositorio.Agregar<Paciente>(paciente);
+                Repositorio.GuardarCambios();
+            }
+            throw new Exception("Ya existe un paciente con los datos ingresados");            
+        }
+
+        public void CrearProfesional(Profesional profecional)
+        {
+            if (!Repositorio.Existe<Profesional>(x => x.Dni == profecional.Dni || x.Cbu == x.Cbu))
+            {
+                Repositorio.Agregar<Profesional>(profecional);
+                Repositorio.GuardarCambios();
+            }
+            throw new Exception("Ya existe un Profesional con los datos ingresados");
+        }
+
+        public void CrearEmpresa(Empresa empresa)
+        {
+            if (!Repositorio.Existe<Empresa>(x => x.Cuit == empresa.Cuit || x.Nombre == empresa.Nombre))
+            {
+                Repositorio.Agregar<Empresa>(empresa);
+                Repositorio.GuardarCambios();
+            }
+            throw new Exception("Ya existe una empresa con los datos ingresados");
         }
     }
 }

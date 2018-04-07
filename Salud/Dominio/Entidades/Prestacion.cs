@@ -16,9 +16,9 @@ namespace Dominio.Entidades
         public int CantidadGuardia { get; set; }
         public int CantidadCuidador { get; set; }
 
-        public Profecional ProfecionalKinesiologo { get; set; }
-        public Profecional ProfecionalEnferemero { get; set; }
-        public Profecional ProfecionalGuardia { get; set; }
-        public Profecional ProfecionalCuidador { get; set; }
+        public Profesional ProfesionalKinesiologo { get; set; }
+        public Profesional ProfesionalEnferemero { get; set; }
+        public Profesional ProfesionalGuardia { get; set; }
+        public Profesional ProfesionalCuidador { get; set; }
     }
 }

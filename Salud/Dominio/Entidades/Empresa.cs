@@ -12,6 +12,7 @@ namespace Dominio.Entidades
         public string Nombre { get; set; }
         public string Direccion { get; set; }
         public string Telefono { get; set; }
+        public string Cuit { get; set; }        
         public ICollection<Zona> Zonas { get; set; }
 
         public decimal PrecioKinesiologia { get; set; }

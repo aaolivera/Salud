@@ -7,6 +7,10 @@
         var urllistarPacientes = "@Url.Action("ListarPacientes")";
         var urllistarProfesionales = "@Url.Action("ListarProfesionales")";
         var urllistarEmpresas = "@Url.Action("ListarEmpresas")";
+
+        var urlCrearPaciente = "@Url.Action("CrearPaciente")";
+        var urlCrearEmpresa = "@Url.Action("CrearEmpresa")";
+        var urlCrearProfesional = "@Url.Action("CrearProfesional")";
     </script>
     <script src="~/Scripts/knockout-3.4.2.js"></script>
     <script src="~/Scripts/index.js"></script>
@@ -14,8 +18,8 @@
 
 
 <div class="row">
-    <div class="col-lg-4 col-md-6 col-sm-12" data-bind="with: PacientesViewModel">
-        <button type="button" class="btn card text-white bg-primary mb-3" style="width:100%" data-bind="click: ListarPacientes">
+    <div class="col-lg-4 col-md-6 col-sm-12" data-bind="with: Models[0]">
+        <button type="button" class="btn card text-white bg-primary mb-3" style="width:100%" data-bind="click: Listar">
             <div class="card-body">
                 <h3 class="card-title">
                     <span class="fa fa-2x fa-address-book"></span>
@@ -25,8 +29,8 @@
             </div>
         </button>
     </div>
-    <div class="col-lg-4 col-md-6  col-sm-12"  data-bind="with: ProfesionalesViewModel">
-        <button type="button" class="btn card text-white bg-info mb-3" style="width:100%" data-bind="click: ListarProfesionales">
+    <div class="col-lg-4 col-md-6  col-sm-12"  data-bind="with: Models[1]">
+        <button type="button" class="btn card text-white bg-info mb-3" style="width:100%" data-bind="click: Listar">
             <div class="card-body">
                 <h3 class="card-title">
                     <span class="fa fa-2x fa-user-md"></span>
@@ -36,8 +40,8 @@
             </div>
         </button>
     </div>
-    <div class="col-lg-4 col-md-6  col-sm-12" data-bind="with: EmpresasViewModel">
-        <button type="button" class="btn card text-white bg-success mb-3" style="width:100%" data-bind="click: ListarEmpresas">
+    <div class="col-lg-4 col-md-6  col-sm-12" data-bind="with: Models[2]">
+        <button type="button" class="btn card text-white bg-success mb-3" style="width:100%" data-bind="click: Listar">
             <div class="card-body">
                 <h3 class="card-title">
                     <span class="fa fa-2x fa-building"></span>
@@ -48,13 +52,18 @@
         </button>
     </div>
 </div>
-@*<div class="row" data-bind="visible: MostrarPacientes">*@
-<div class="row" data-bind="with: PacientesViewModel">
+<div class="alert alert-danger alert-dismissible fade" id="alertError" role="alert">
+    <strong>Error: </strong> <span id="mensajeError"></span>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="row" data-bind="with: Models[0]">
     @Html.Partial("Pacientes")
 </div>
-<div class="row" data-bind="with: ProfesionalesViewModel">
+<div class="row" data-bind="with: Models[1]">
     @Html.Partial("Profesionales")
 </div>
-<div class="row" data-bind="with: EmpresasViewModel">
+<div class="row" data-bind="with: Models[2]">
     @Html.Partial("Empresas")
 </div>
