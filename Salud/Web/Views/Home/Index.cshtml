@@ -11,6 +11,8 @@
         var urlCrearPaciente = "@Url.Action("CrearPaciente")";
         var urlCrearEmpresa = "@Url.Action("CrearEmpresa")";
         var urlCrearProfesional = "@Url.Action("CrearProfesional")";
+
+        var urlEliminarEmpresa = "@Url.Action("EliminarEmpresa")";
     </script>
     <script src="~/Scripts/knockout-3.4.2.js"></script>
     <script src="~/Scripts/index.js"></script>
@@ -52,12 +54,10 @@
         </button>
     </div>
 </div>
-<div class="alert alert-danger alert-dismissible fade" id="alertError" role="alert">
-    <strong>Error: </strong> <span id="mensajeError"></span>
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
+<div id="alertContainer">
+
 </div>
+
 <div class="row" data-bind="with: Models[0]">
     @Html.Partial("Pacientes")
 </div>

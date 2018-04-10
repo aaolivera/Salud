@@ -2,10 +2,12 @@
     <div class="card text-white bg-primary mb-3" style="width:100%">
         <div class="card-body">
             <div class="row" data-bind="visible: Cargando">
-                <h3 class="card-title">
-                    <span class="fa fa-2x fa-spinner"></span>
-                    Cargando
-                </h3>
+                <div class="col-3 offset-4">
+                    <h3 class="card-title">
+                        <span class="fa fa-2x fa-spinner"></span>
+                        Cargando
+                    </h3>
+                </div>
             </div>
             <div class="row" data-bind="visible: !Cargando()">
                 <nav class="navbar" style="padding-left: 0px;">

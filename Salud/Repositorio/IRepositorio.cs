@@ -72,7 +72,7 @@ namespace Repositorio
         /// <typeparam name="TEntidad">Tipo de la entidad a devolver</typeparam>
         /// <param name="condicion">Expresion que dada una entidad devuelve si debe devolverse o no</param>
         /// <returns>Todas las entidades que cumplen con la condicion</returns>
-        IList<TEntidad> Listar<TEntidad>(Expression<Func<TEntidad, Boolean>> condicion = null) where TEntidad : class;
+        IList<TEntidad> Listar<TEntidad>(Expression<Func<TEntidad, Boolean>> condicion = null, Expression<Func<TEntidad, object>> include = null) where TEntidad : class;
         IList<TEntidad> Listar<TEntidad>(IEnumerable<Expression<Func<TEntidad, object>>> includes, Expression<Func<TEntidad, Boolean>> condicion = null) where TEntidad : class;
         IList<TProyeccion> Listar<TEntidad, TProyeccion>(Expression<Func<TEntidad, TProyeccion>> proyeccion, Expression<Func<TEntidad, Boolean>> condicion = null) where TEntidad : class;
         List<TProyeccion> ListarDistintos<TEntidad, TProyeccion>(Expression<Func<TEntidad, TProyeccion>> proyeccion, Expression<Func<TEntidad, Boolean>> condicion, int maxResultados) where TEntidad : class;

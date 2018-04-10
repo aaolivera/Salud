@@ -1,6 +1,7 @@
 ﻿function Paciente(datos) {
     var self = this;
     if (datos !== undefined) {
+        self.Id = ko.observable(datos.Id);
         self.Nombre = ko.observable(datos.Nombre);
         self.Apellido = ko.observable(datos.Apellido);
         self.Direccion = ko.observable(datos.Direccion);
@@ -15,6 +16,7 @@
         self.Prestaciones = ko.observableArray(datos.Prestaciones);
         //
     } else {
+        self.Id = ko.observable(0);
         self.Nombre = ko.observable('');
         self.Apellido = ko.observable('');
         self.Direccion = ko.observable('');
@@ -45,6 +47,7 @@
 
 function Prestacion(datos) {
     var self = this;
+    self.Id = ko.observable(datos.Id);
     self.Inicio = ko.observable(datos.Inicio);
     self.Fin = ko.observable(datos.Fin);
     self.CantidadKinesiologia = ko.observable(datos.CantidadKinesiologia);
@@ -61,6 +64,7 @@ function Prestacion(datos) {
 function Profesional(datos) {
     var self = this;
     if (datos !== undefined) {
+        self.Id = ko.observable(datos.Id);
         self.Nombre = ko.observable(datos.Nombre);
         self.Apellido = ko.observable(datos.Apellido);
         self.Direccion = ko.observable(datos.Direccion);
@@ -76,6 +80,7 @@ function Profesional(datos) {
         self.PrecioGuardia = ko.observable(datos.PrecioGuardia);
         self.PrecioCuidador = ko.observable(datos.PrecioCuidador);
     } else {
+        self.Id = ko.observable(0);
         self.Nombre = ko.observable('');
         self.Apellido = ko.observable('');
         self.Direccion = ko.observable('');
@@ -110,18 +115,26 @@ function Profesional(datos) {
 function Empresa(datos) {
     var self = this;
     if (datos !== undefined) {
+        self.Id = ko.observable(datos.Id);
         self.Nombre = ko.observable(datos.Nombre);
         self.Direccion = ko.observable(datos.Direccion);
         self.Telefono = ko.observable(datos.Telefono);
         self.Cuit = ko.observable(datos.Cuit);
         //
-        self.Zonas = ko.observableArray(datos.Zonas);
+        self.Zonas = ko.observableArray();
+        if (datos.Zonas != null) {
+             datos.Zonas.forEach(function (entry) {
+                self.Zonas.push(new Zona(entry,self));
+             }); 
+        }
+              
         //
         self.PrecioKinesiologia = ko.observable(datos.PrecioKinesiologia);
         self.PrecioEnferemeria = ko.observable(datos.PrecioEnferemeria);
         self.PrecioGuardia = ko.observable(datos.PrecioGuardia);
         self.PrecioCuidador = ko.observable(datos.PrecioCuidador);
     } else {
+        self.Id = ko.observable(0);
         self.Nombre = ko.observable('');
         self.Direccion = ko.observable('');
         self.Telefono = ko.observable('');
@@ -134,6 +147,19 @@ function Empresa(datos) {
         self.PrecioGuardia = ko.observable(0);
         self.PrecioCuidador = ko.observable(0);
     }
+
+    self.ZonaNueva = ko.observable('');
+    self.AgregarZona = function () {
+        var match = ko.utils.arrayFirst(self.Zonas(), function (item) {
+            return self.ZonaNueva === item.name;
+        });
+
+        if (self.ZonaNueva() != '' && !match) {
+            self.Zonas.push(new Zona({ Id: 0, Nombre: self.ZonaNueva() }, self));
+            self.ZonaNueva('')
+        }        
+    }
+
     self.Guardar = function (callback) {
         $.ajax({
             type: "POST",
@@ -148,11 +174,22 @@ function Empresa(datos) {
             }
         });
     }
+
+    self.Borrar = function (callback) {
+        $.post(urlEliminarEmpresa, { Id: self.Id }, callback).fail(function (xhr, textStatus, errorThrown) {
+            MensajeError(xhr.responseText);
+        });
+    }
 }
 
-function Zona(datos) {
+function Zona(datos, empresa) {
     var self = this;
+    self.Id = ko.observable(datos.Id);
     self.Nombre = ko.observable(datos.Nombre);
+
+    self.Borrar = function () {
+        empresa.Zonas.remove(self)
+    }
 }
 
 function GenericListViewModel(viewModel, urlListar, entidad) {
@@ -160,10 +197,11 @@ function GenericListViewModel(viewModel, urlListar, entidad) {
     self.Lista = ko.observableArray([]);
     self.Cargando = ko.observable(true);
     self.Visible = ko.observable(false);
+    self.Filtro = ko.observable('');
     self.Listar = function () {
         mostrar();
         if (self.Cargando()) {
-            $.getJSON(urlListar, function (data) {
+            $.getJSON(urlListar, { filtro: self.Filtro()}, function (data) {
                 temp = [];
                 data.forEach(function (entry) {
                     temp.push(new entidad(entry));
@@ -178,24 +216,44 @@ function GenericListViewModel(viewModel, urlListar, entidad) {
         self.Listar();
     }
 
-    self.Nueva = ko.observable(null);
+    self.Modificando = ko.observable(null);
     self.MostrarCrear = function () {
         ocultar();
-        self.Nueva(new entidad());
+        self.Modificando(new entidad());
+    }
+    self.MostrarEditar = function (editando) {
+        ocultar();
+        self.Modificando(editando);
     }
     self.Crear = function () {
         if (validarCampos()) {
-            self.Nueva().Guardar(
-                function () {
-                    self.Lista.push(self.Nueva());
-                    self.Nueva(null);
+            self.Modificando().Guardar(
+                function (id) {
+                    self.Modificando().Id(id);
+                    self.Lista.push(self.Modificando());
+                    self.Modificando(null);
                     mostrar();
                 }
             );
         }
     }
+    self.Modificar = function () {
+        if (validarCampos()) {
+            self.Modificando().Guardar(
+                function () {
+                    self.Modificando(null);
+                    mostrar();
+                }
+            );
+        }
+    }
+    self.Borrar = function (eliminando) {
+        eliminando.Borrar(function () {
+            self.Lista.remove(eliminando)
+        })
+    }
     self.Cancelar = function () {
-        self.Nueva(null);
+        self.Modificando(null);
         mostrar();
     }
 
@@ -206,7 +264,7 @@ function GenericListViewModel(viewModel, urlListar, entidad) {
     function ocultar() {
         viewModel.Models.forEach(function (entry) {
             entry.Visible(false);
-            entry.Nueva(null);
+            entry.Modificando(null);
         });
     }
 }
@@ -233,6 +291,10 @@ function validarCampos() {
 }
 
 function MensajeError(string) {
-    $('#mensajeError').html(string);
-    $('#alertError').addClass('show');
+    $('#alertContainer').html(`<div class="alert alert-danger alert-dismissible fade show" id="alertError" role="alert">
+        <strong>Error: </strong> <span id="mensajeError">` + string + `</span>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>`);
 }
