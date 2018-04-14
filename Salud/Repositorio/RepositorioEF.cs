@@ -95,16 +95,12 @@ namespace Repositorio
             return Set<TEntidad>().Where(filtro).OrderBy(columnaOrden).Select(proyeccion).FirstOrDefault();
         }
 
-        public IList<TEntidad> Listar<TEntidad>(Expression<Func<TEntidad, bool>> filtro = null, Expression<Func<TEntidad, object>> include = null) where TEntidad : class
+        public IList<TEntidad> Listar<TEntidad>(Expression<Func<TEntidad, bool>> filtro = null) where TEntidad : class
         {
             IQueryable<TEntidad> resultado = Set<TEntidad>();
             if (filtro != null)
             {
                 resultado = resultado.Where(filtro);
-            }
-            if(include != null)
-            {
-                resultado = resultado.Include(include);
             }
             return resultado.ToList();
         }

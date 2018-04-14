@@ -7,56 +7,73 @@
         var urllistarPacientes = "@Url.Action("ListarPacientes")";
         var urllistarProfesionales = "@Url.Action("ListarProfesionales")";
         var urllistarEmpresas = "@Url.Action("ListarEmpresas")";
+        var urllistarPrestaciones = "@Url.Action("ListarPrestaciones")";
 
         var urlCrearPaciente = "@Url.Action("CrearPaciente")";
         var urlCrearEmpresa = "@Url.Action("CrearEmpresa")";
         var urlCrearProfesional = "@Url.Action("CrearProfesional")";
+        var urlCrearPrestacion = "@Url.Action("CrearPrestacion")";
 
+        var urlEliminarPaciente = "@Url.Action("EliminarPaciente")";
         var urlEliminarEmpresa = "@Url.Action("EliminarEmpresa")";
+        var urlEliminarProfesional = "@Url.Action("EliminarProfesional")";
+        var urlEliminarPrestacion = "@Url.Action("EliminarPrestacion")";
     </script>
     <script src="~/Scripts/knockout-3.4.2.js"></script>
     <script src="~/Scripts/index.js"></script>
 }
 
 
-<div class="row">
-    <div class="col-lg-4 col-md-6 col-sm-12" data-bind="with: Models[0]">
-        <button type="button" class="btn card text-white bg-primary mb-3" style="width:100%" data-bind="click: Listar">
-            <div class="card-body">
-                <h3 class="card-title">
-                    <span class="fa fa-2x fa-address-book"></span>
-                    Pacientes
-                </h3>
-                @*<p class="card-text">Activos: 20</p>*@
-            </div>
-        </button>
+    <div class="row">
+        <div class="col-lg-3 col-md-6  col-sm-12" data-bind="with: Models[3]">
+            <button type="button" class="btn card text-white bg-warning mb-3" style="width:100%" data-bind="click: Listar">
+                <div @*class="card-body"*@>
+                    <h3 class="card-title">
+                        <span class="fa fa-2x fa-ambulance"></span>
+                        Prestaciones
+                    </h3>
+                    @*<p class="card-text">Activos: 20</p>*@
+                </div>
+            </button>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12" data-bind="with: Models[0]">
+            <button type="button" class="btn card text-white bg-primary mb-3" style="width:100%" data-bind="click: Listar">
+                <div @*class="card-body"*@>
+                    <h3 class="card-title">
+                        <span class="fa fa-2x fa-address-book"></span>
+                        Pacientes
+                    </h3>
+                    @*<p class="card-text">Activos: 20</p>*@
+                </div>
+            </button>
+        </div>
+        <div class="col-lg-3 col-md-6  col-sm-12" data-bind="with: Models[1]">
+            <button type="button" class="btn card text-white bg-info mb-3" style="width:100%" data-bind="click: Listar">
+                <div @*class="card-body"*@>
+                    <h3 class="card-title">
+                        <span class="fa fa-2x fa-user-md"></span>
+                        Profesionales
+                    </h3>
+                    @*<p class="card-text">Activos: 20</p>*@
+                </div>
+            </button>
+        </div>
+        <div class="col-lg-3 col-md-6  col-sm-12" data-bind="with: Models[2]">
+            <button type="button" class="btn card text-white bg-success mb-3" style="width:100%" data-bind="click: Listar">
+                <div @*class="card-body"*@>
+                    <h3 class="card-title">
+                        <span class="fa fa-2x fa-building"></span>
+                        Empresas
+                    </h3>
+                    @*<p class="card-text">Activos: 20</p>*@
+                </div>
+            </button>
+        </div>
     </div>
-    <div class="col-lg-4 col-md-6  col-sm-12"  data-bind="with: Models[1]">
-        <button type="button" class="btn card text-white bg-info mb-3" style="width:100%" data-bind="click: Listar">
-            <div class="card-body">
-                <h3 class="card-title">
-                    <span class="fa fa-2x fa-user-md"></span>
-                    Profesionales
-                </h3>
-                @*<p class="card-text">Activos: 20</p>*@
-            </div>
-        </button>
-    </div>
-    <div class="col-lg-4 col-md-6  col-sm-12" data-bind="with: Models[2]">
-        <button type="button" class="btn card text-white bg-success mb-3" style="width:100%" data-bind="click: Listar">
-            <div class="card-body">
-                <h3 class="card-title">
-                    <span class="fa fa-2x fa-building"></span>
-                    Empresas
-                </h3>
-                @*<p class="card-text">Activos: 20</p>*@
-            </div>
-        </button>
-    </div>
-</div>
 <div id="alertContainer">
 
 </div>
+
 
 <div class="row" data-bind="with: Models[0]">
     @Html.Partial("Pacientes")
@@ -66,4 +83,7 @@
 </div>
 <div class="row" data-bind="with: Models[2]">
     @Html.Partial("Empresas")
+</div>
+<div class="row" data-bind="with: Models[3]">
+    @Html.Partial("Prestaciones")
 </div>

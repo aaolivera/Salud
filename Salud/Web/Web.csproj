@@ -259,6 +259,10 @@
     <Content Include="Views\Home\Pacientes.cshtml" />
     <Content Include="Views\Home\Profesionales.cshtml" />
     <Content Include="Views\Home\EmpresasCrearModificar.cshtml" />
+    <Content Include="Views\Home\ProfesionalesCrearModificar.cshtml" />
+    <Content Include="Views\Home\PacientesCrearModificar.cshtml" />
+    <Content Include="Views\Home\Prestaciones.cshtml" />
+    <Content Include="Views\Home\PrestacionesCrearModificar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

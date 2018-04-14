@@ -1,0 +1,102 @@
+﻿<div class="col-12" data-bind="with: Modificando">
+    <div class="card text-white bg-warning mb-3" style="width:100%">
+        <div class="card-body">
+            <form class="needs-validation" id="myForm" novalidate>
+                <div class="form-row">
+                    <div class="col-md-8">
+                        <label class="col-form-label col-form-label-sm">Nombre</label>
+                        <input type="text" class="form-control form-control-sm" placeholder="Nombre" required data-bind="value: Nombre">
+                        <div class="invalid-feedback">
+                            El dato es obligatorio
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="col-form-label col-form-label-sm">Tel</label>
+                        <input type="text" class="form-control form-control-sm" placeholder="Tel" required data-bind="value: Telefono">
+                        <div class="invalid-feedback">
+                            El dato es obligatorio
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-8 mb-3">
+                        <label class="col-form-label col-form-label-sm">Direccón</label>
+                        <input type="text" class="form-control form-control-sm" placeholder="Direccón" required data-bind="value: Direccion">
+                        <div class="invalid-feedback">
+                            El dato es obligatorio
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="col-form-label col-form-label-sm">Cuit</label>
+                        <input type="text" class="form-control form-control-sm" placeholder="Cuit" required data-bind="value: Cuit">
+                        <div class="invalid-feedback">
+                            El dato es obligatorio
+                        </div>
+                    </div>
+                </div>
+                <div class="alert alert-warning" role="alert" style="padding-top:0">
+                    <div>Precios</div>
+                    <div class="form-row">
+                        <div class="col-md-3">
+                            <label class="col-form-label col-form-label-sm">Kinesiologia</label>
+                            <input type="text" class="form-control form-control-sm" placeholder="Cantidad" required data-bind="value: PrecioKinesiologia">
+                            <div class="invalid-feedback">
+                                El dato es obligatorio
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="col-form-label col-form-label-sm">Enfermeria</label>
+                            <input type="text" class="form-control form-control-sm" placeholder="Cantidad" required data-bind="value: PrecioEnferemeria">
+                            <div class="invalid-feedback">
+                                El dato es obligatorio
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="col-form-label col-form-label-sm">Guardia</label>
+                            <input type="text" class="form-control form-control-sm" placeholder="Cantidad" required data-bind="value: PrecioGuardia">
+                            <div class="invalid-feedback">
+                                El dato es obligatorio
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="col-form-label col-form-label-sm">Cuidador</label>
+                            <input type="text" class="form-control form-control-sm" placeholder="Cantidad" required data-bind="value: PrecioCuidador">
+                            <div class="invalid-feedback">
+                                El dato es obligatorio
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="alert alert-warning" role="alert" style="padding-top:0">
+                    <div>Zonas</div>
+                    <div class="form-row">
+                        <div class="col-md-12">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="nueva zona" aria-label="zona" aria-describedby="basic-addon2"  data-bind="value: ZonaNueva">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" data-bind="click: AgregarZona"><span class="fa fa-plus-circle"></span></button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ko foreach: Zonas -->
+                        <div class="col-md-6">
+                            <a href="#" data-bind="click: Borrar"><span class="fa fa-trash"></span></a>
+                            <label class="col-form-label col-form-label-sm" data-bind="text: Nombre"></label>
+
+                        </div>
+                        <!-- /ko -->
+                    </div>
+                </div>
+                <div class="form-row mx-auto">
+                    <div class="col-md-2 offset-4">
+                        <button class="btn btn-primary" style="width:100%" data-bind="click: $root.Models[3].Crear, visible: Id() == 0">Crear</button>
+                        <button class="btn btn-primary" style="width:100%" data-bind="click: $root.Models[3].Modificar, visible: Id() != 0">Modificar</button>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-primary" style="width:100%" data-bind="click: $root.Models[3].Cancelar">Cancelar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

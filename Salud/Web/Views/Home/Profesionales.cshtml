@@ -12,8 +12,8 @@
             <div class="row" data-bind="visible: !Cargando()">
                 <nav class="navbar" style="padding-left: 0px;">
                     <form class="form-inline">
-                        <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">
-                        <button class="btn  my-2 my-sm-0 mr-sm-2" type="button">Buscar</button>
+                        <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search" data-bind="value: Filtro">
+                        <button class="btn  my-2 my-sm-0 mr-sm-2" type="button" data-bind="click: Recargar">Buscar</button>
                         <button class="btn  my-2 my-sm-0 mr-sm-2" type="button" data-bind="click: MostrarCrear"><span class="fa fa-plus-circle"></span></button>
                         <button class="btn  my-2 my-sm-0" type="button" data-bind="click: Recargar"><span class="fa fa-retweet"></span></button>
                     </form>
@@ -30,7 +30,10 @@
                     </thead>
                     <tbody data-bind="foreach: Lista">
                         <tr>
-                            <th scope="row"><button class="btn  my-2 my-sm-0 fa fa-edit" type="button"></button></th>
+                            <th scope="row">
+                                <button class="btn  my-2 my-sm-0 fa fa-edit" type="button" data-bind="click: function (){$parent.MostrarEditar($data);}"></button>
+                                <button class="btn  my-2 my-sm-0 fa fa-trash" type="button" data-bind="click: function (){$parent.Borrar($data);}"></button>
+                            </th>
                             <td data-bind="text: Nombre"></td>
                             <td data-bind="text: Apellido"></td>
                             <td data-bind="text: Direccion"></td>
@@ -42,3 +45,4 @@
         </div>
     </div>
 </div>
+@Html.Partial("ProfesionalesCrearModificar")

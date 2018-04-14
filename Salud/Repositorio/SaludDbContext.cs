@@ -11,17 +11,18 @@ namespace Repositorio
     {
         public SaludDbContext():base("SaludDbContext")
         {
+            Configuration.ProxyCreationEnabled = true;
+            Configuration.LazyLoadingEnabled = true;
+
             // Eliminar siempre la base de datos
-            //Database.SetInitializer(new DropCreateDatabaseAlways<ConsoleDbContext>());
+            Database.SetInitializer(new DropCreateDatabaseAlways<SaludDbContext>());
 
             // Crear la base de datos si no existe.
-            //Database.SetInitializer(new CreateDatabaseIfNotExists<ConsoleDbContext>());
+            //Database.SetInitializer(new CreateDatabaseIfNotExists<SaludDbContext>());
 
             // Eliminar y Crear nuevamente la base de datos al 
             // detectar cambios en el modelo. 
-            Configuration.ProxyCreationEnabled = true;
-            Configuration.LazyLoadingEnabled = true;
-            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<SaludDbContext>());
+            //Database.SetInitializer(new DropCreateDatabaseIfModelChanges<SaludDbContext>());
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

@@ -13,9 +13,7 @@ namespace Dominio.Entidades
         public string Dni { get; set; }
         public string Telefono { get; set; }
         public string Contacto { get; set; }
-        public string ContactoTelefono { get; set; }
-        public Zona Zona { get; set; }
-
+        public string ContactoTelefono { get; set; }        
 
         public ICollection<Prestacion> Prestaciones { get; set; }
     }

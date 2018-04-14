@@ -9,12 +9,6 @@
         self.Telefono = ko.observable(datos.Telefono);
         self.Contacto = ko.observable(datos.Contacto);
         self.ContactoTelefono = ko.observable(datos.ContactoTelefono);
-        
-        //
-        self.Empresa = ko.observable(datos.Empresa);
-        self.Zona = ko.observable(datos.Zona);
-        self.Prestaciones = ko.observableArray(datos.Prestaciones);
-        //
     } else {
         self.Id = ko.observable(0);
         self.Nombre = ko.observable('');
@@ -24,41 +18,64 @@
         self.Telefono = ko.observable('');
         self.Contacto = ko.observable('');
         self.ContactoTelefono = ko.observable('');
-
-        self.Empresa = ko.observable('');
-        self.Zona = ko.observable('');        
-        self.Prestaciones = ko.observableArray([]);
     }
+
     self.Guardar = function (callback) {
-        $.ajax({
-            type: "POST",
-            url: urlCrearPaciente,
-            data: ko.toJSON(self),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: callback,
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                var responseTitle = $(XMLHttpRequest.responseText).filter('title').get(0);
-                MensajeError(responseTitle.innerHTML);
-            }
-        });
+        Guardar(callback, urlCrearPaciente, self);
+    }
+
+    self.Borrar = function (callback) {
+        Borrar(callback, urlEliminarPaciente);
     }
 }
 
 function Prestacion(datos) {
     var self = this;
-    self.Id = ko.observable(datos.Id);
-    self.Inicio = ko.observable(datos.Inicio);
-    self.Fin = ko.observable(datos.Fin);
-    self.CantidadKinesiologia = ko.observable(datos.CantidadKinesiologia);
-    self.CantidadEnferemeria = ko.observable(datos.CantidadEnferemeria);
-    self.CantidadGuardia = ko.observable(datos.CantidadGuardia);
-    self.CantidadCuidador = ko.observable(datos.CantidadCuidador);
+    if (datos !== undefined) {
+        self.Id = ko.observable(datos.Id);
+        self.Zona = ko.observable(datos.Zona);
+        self.Profesional = ko.observable(datos.Profesional);
+        self.Inicio = ko.observable(datos.Inicio);
+        self.Fin = ko.observable(datos.Fin);
+        self.Cantidad = ko.observable(datos.Cantidad);
+        //
+        self.Visitas = ko.observableArray();
+        if (datos.Visitas != null) {
+            datos.Visitas.forEach(function (entry) {
+                self.Visitas.push(new Visita(entry, self));
+            });
+        }
+        //
+    } else {
+        self.Id = ko.observable(0);
+        self.Zona = ko.observable();
+        self.Profesional = ko.observable();
+        self.Inicio = ko.observable('');
+        self.Fin = ko.observable('');
+        self.Cantidad = ko.observable(0);
 
-    self.ProfesionalKinesiologo = ko.observable(datos.ProfesionalKinesiologo);
-    self.ProfesionalEnferemero = ko.observable(datos.ProfesionalEnferemero);
-    self.ProfesionalGuardia = ko.observable(datos.ProfesionalGuardia);
-    self.ProfesionalCuidador = ko.observable(datos.ProfesionalCuidador);
+        self.Visitas = ko.observableArray([]);
+    }
+
+    self.Guardar = function (callback) {
+        Guardar(callback, urlCrearPrestacion, self);
+    }
+
+    self.Borrar = function (callback) {
+        Borrar(callback, urlEliminarPrestacion);
+    }
+}
+
+function Visita(datos, prestacion) {
+    var self = this;
+    self.Id = ko.observable(datos.Id);
+    self.Mes = ko.observable(datos.Mes);
+    self.Estado = ko.observable(datos.Estado);
+    self.ProfesionalEfectivo = ko.observable(datos.ProfesionalEfectivo);
+
+    self.Borrar = function () {
+        prestacion.Visitas.remove(self)
+    }
 }
 
 function Profesional(datos) {
@@ -97,18 +114,11 @@ function Profesional(datos) {
         self.PrecioCuidador = ko.observable(0);
     }
     self.Guardar = function (callback) {
-        $.ajax({
-            type: "POST",
-            url: urlCrearProfesional,
-            data: ko.toJSON(self),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: callback,
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                var responseTitle = $(XMLHttpRequest.responseText).filter('title').get(0);
-                MensajeError(responseTitle.innerHTML);
-            }
-        });
+        Guardar(callback, urlCrearProfesional, self);
+    }
+
+    self.Borrar = function (callback) {
+        Borrar(callback, urlEliminarProfesional);
     }
 }
 
@@ -126,8 +136,7 @@ function Empresa(datos) {
              datos.Zonas.forEach(function (entry) {
                 self.Zonas.push(new Zona(entry,self));
              }); 
-        }
-              
+        }  
         //
         self.PrecioKinesiologia = ko.observable(datos.PrecioKinesiologia);
         self.PrecioEnferemeria = ko.observable(datos.PrecioEnferemeria);
@@ -161,24 +170,11 @@ function Empresa(datos) {
     }
 
     self.Guardar = function (callback) {
-        $.ajax({
-            type: "POST",
-            url: urlCrearEmpresa,
-            data: ko.toJSON(self),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: callback,
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                var responseTitle = $(XMLHttpRequest.responseText).filter('title').get(0);
-                MensajeError(responseTitle.innerHTML);
-            }
-        });
+        Guardar(callback, urlCrearEmpresa, self);        
     }
 
     self.Borrar = function (callback) {
-        $.post(urlEliminarEmpresa, { Id: self.Id }, callback).fail(function (xhr, textStatus, errorThrown) {
-            MensajeError(xhr.responseText);
-        });
+        Borrar(callback, urlEliminarEmpresa);
     }
 }
 
@@ -274,9 +270,13 @@ function viewModel() {
     self.Models = [
         new GenericListViewModel(self, urllistarPacientes, Paciente),
         new GenericListViewModel(self, urllistarProfesionales, Profesional),
-        new GenericListViewModel(self, urllistarEmpresas, Empresa)
-    ];
-
+        new GenericListViewModel(self, urllistarEmpresas, Empresa),
+        new GenericListViewModel(self, urllistarPrestaciones, Prestacion)
+    ]; 
+    self.Models[0].Recargar();
+    self.Models[1].Recargar();
+    self.Models[2].Recargar();
+    self.Models[3].Recargar();
 }
 
 $(document).ready(function () {
@@ -297,4 +297,25 @@ function MensajeError(string) {
             <span aria-hidden="true">&times;</span>
         </button>
     </div>`);
+}
+
+function Guardar(callback, url, entidad) {
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: ko.toJSON(entidad),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: callback,
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            var responseTitle = $(XMLHttpRequest.responseText).filter('title').get(0);
+            MensajeError(responseTitle.innerHTML);
+        }
+    });
+}
+
+function Borrar(callback, url) {
+    $.post(url, { Id: self.Id }, callback).fail(function (xhr, textStatus, errorThrown) {
+        MensajeError(xhr.responseText);
+    });
 }
