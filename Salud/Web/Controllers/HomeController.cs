@@ -41,7 +41,7 @@ namespace Web.Controllers
 
         public JsonResult ListarPrestaciones(string filtro = null)
         {
-            return Json(Repositorio.Listar<Prestacion>(new List<Expression<Func<Prestacion, object>>> { x => x.Zona, x => x.Profesional, x => x.Visitas.Select(y => y.ProfesionalEfectivo) }, x => (filtro == "" || filtro == null || x.Paciente.Nombre.Contains(filtro)) ), JsonRequestBehavior.AllowGet);
+            return Json(Repositorio.Listar<Prestacion>(new List<Expression<Func<Prestacion, object>>> { x => x.Zona, x => x.Paciente, x => x.Profesional, x => x.Visitas.Select(y => y.ProfesionalEfectivo) }, x => (filtro == "" || filtro == null || x.Paciente.Nombre.Contains(filtro)) ), JsonRequestBehavior.AllowGet);
         }
 
         public int CrearPaciente(Paciente paciente)
@@ -103,6 +103,19 @@ namespace Web.Controllers
 
         public int CrearPrestacion(Prestacion prestacion)
         {
+            if(prestacion.Paciente != null)
+            {
+                prestacion.Paciente = Repositorio.Obtener<Paciente>(prestacion.Paciente.Id);
+            }
+            if (prestacion.Profesional != null)
+            {
+                prestacion.Profesional = Repositorio.Obtener<Profesional>(prestacion.Profesional.Id);
+            }
+            if (prestacion.Zona != null)
+            {
+                prestacion.Zona = Repositorio.Obtener<Zona>(prestacion.Zona.Id);
+            }
+
             if (prestacion.Id == 0)
             {
                 prestacion = Repositorio.Agregar<Prestacion>(prestacion);
@@ -147,6 +160,19 @@ namespace Web.Controllers
             try
             {
                 Repositorio.Remover<Profesional>(id);
+                Repositorio.GuardarCambios();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error al borrar la entidad: " + e.Message);
+            }
+        }
+
+        public void EliminarPrestacion(int id)
+        {
+            try
+            {
+                Repositorio.Remover<Prestacion>(id);
                 Repositorio.GuardarCambios();
             }
             catch (Exception e)

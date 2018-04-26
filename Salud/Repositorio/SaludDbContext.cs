@@ -15,14 +15,14 @@ namespace Repositorio
             Configuration.LazyLoadingEnabled = true;
 
             // Eliminar siempre la base de datos
-            Database.SetInitializer(new DropCreateDatabaseAlways<SaludDbContext>());
+            //Database.SetInitializer(new DropCreateDatabaseAlways<SaludDbContext>());
 
             // Crear la base de datos si no existe.
             //Database.SetInitializer(new CreateDatabaseIfNotExists<SaludDbContext>());
 
             // Eliminar y Crear nuevamente la base de datos al 
             // detectar cambios en el modelo. 
-            //Database.SetInitializer(new DropCreateDatabaseIfModelChanges<SaludDbContext>());
+            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<SaludDbContext>());
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

@@ -22,19 +22,20 @@
                     <thead>
                         <tr class="text-white bg-dark">
                             <th scope="col">#</th>
-                            <th scope="col">Nombre</th>
-                            <th scope="col">Apellido</th>
+                            <th scope="col">Profesional</th>
+                            <th scope="col">Paciente</th>
                             <th scope="col">Direccion</th>
-                            <th scope="col">Telefono</th>
                         </tr>
                     </thead>
                     <tbody data-bind="foreach: Lista">
                         <tr>
-                            <th scope="row"><button class="btn  my-2 my-sm-0 fa fa-edit" type="button"></button></th>
-                            <td data-bind="text: Nombre"></td>
-                            <td data-bind="text: Apellido"></td>
-                            <td data-bind="text: Direccion"></td>
-                            <td data-bind="text: Telefono"></td>
+                            <th scope="row">
+                                <button class="btn  my-2 my-sm-0 fa fa-edit" type="button" data-bind="click: function (){$parent.MostrarEditar($data);}"></button>
+                                <button class="btn  my-2 my-sm-0 fa fa-trash" type="button" data-bind="click: function (){$parent.Borrar($data);}"></button>
+                            </th>
+                            <td data-bind="text: Profesional().Nombre"></td>
+                            <td data-bind="text: Paciente().Apellido() + ', ' + Paciente().Nombre()"></td>
+                            <td data-bind="text: Paciente().Direccion"></td>
                         </tr>
                     </tbody>
                 </table>

@@ -64,8 +64,8 @@ namespace Web.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            kernel.Bind<DbContext>().To<SaludDbContext>().InScope(ctx => HttpContext.Current);
-            kernel.Bind<IRepositorio, RepositorioEF>().To<RepositorioEF>().InScope(ctx => HttpContext.Current);
+            kernel.Bind<DbContext>().To<SaludDbContext>().InRequestScope();
+            kernel.Bind<IRepositorio>().To<RepositorioEF>().InRequestScope();
         }
     }
 }

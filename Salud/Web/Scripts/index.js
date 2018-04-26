@@ -34,7 +34,8 @@ function Prestacion(datos) {
     if (datos !== undefined) {
         self.Id = ko.observable(datos.Id);
         self.Zona = ko.observable(datos.Zona);
-        self.Profesional = ko.observable(datos.Profesional);
+        self.Profesional = ko.observable(new Profesional(datos.Profesional));
+        self.Paciente = ko.observable(new Paciente(datos.Paciente));
         self.Inicio = ko.observable(datos.Inicio);
         self.Fin = ko.observable(datos.Fin);
         self.Cantidad = ko.observable(datos.Cantidad);
@@ -50,11 +51,13 @@ function Prestacion(datos) {
         self.Id = ko.observable(0);
         self.Zona = ko.observable();
         self.Profesional = ko.observable();
+        self.Paciente = ko.observable();
         self.Inicio = ko.observable('');
         self.Fin = ko.observable('');
         self.Cantidad = ko.observable(0);
 
         self.Visitas = ko.observableArray([]);
+        self.ModalPrestacion = new ModalPrestacion();
     }
 
     self.Guardar = function (callback) {
@@ -182,6 +185,7 @@ function Zona(datos, empresa) {
     var self = this;
     self.Id = ko.observable(datos.Id);
     self.Nombre = ko.observable(datos.Nombre);
+    self.EmpresaNombre = empresa.Nombre();
 
     self.Borrar = function () {
         empresa.Zonas.remove(self)
@@ -252,7 +256,7 @@ function GenericListViewModel(viewModel, urlListar, entidad) {
         self.Modificando(null);
         mostrar();
     }
-
+    
     function mostrar() {
         ocultar();
         self.Visible(true);
@@ -262,6 +266,58 @@ function GenericListViewModel(viewModel, urlListar, entidad) {
             entry.Visible(false);
             entry.Modificando(null);
         });
+    }
+}
+
+function ModalPrestacion() {
+    self = this;
+    self.Zonas = ko.pureComputed(function () {
+        var zonas = [];
+        ko.utils.arrayForEach(window.model.Models[2].Lista(), function (entry) {
+            zonas.push.apply(zonas, entry.Zonas());
+        });
+        return zonas;
+    });
+
+    self.TipoProfesionales = ko.observableArray(['Kinesiologia', 'Guardia', 'Enferemeria', 'Cuidador']);
+    self.TipoProfesional = ko.observable();
+
+    self.Profesionales = ko.computed(function () {
+        if (!self.TipoProfesional()) {
+            return [];
+        } else {
+            return ko.utils.arrayFilter(window.model.Models[1].Lista(), function (prod) {
+                return self.TipoProfesional() == 'Kinesiologia' && prod.PrecioKinesiologia() > 0 ||
+                    self.TipoProfesional() == 'Guardia' && prod.PrecioGuardia() > 0 ||
+                    self.TipoProfesional() == 'Enferemeria' && prod.PrecioEnferemeria() > 0 ||
+                    self.TipoProfesional() == 'Cuidador' && prod.PrecioCuidador() > 0
+            });
+        }
+    });
+
+    self.PacientesFiltrados = ko.observableArray([]);
+    self.PacienteEscrito = ko.observable();
+    self.Filtro = ko.computed(function () {
+        var filtro = self.PacienteEscrito();
+        var i = 0;
+        var resultado = ko.utils.arrayFilter(window.model.Models[0].Lista(), function (prod) {
+            if (i === 20) return false;
+            var r = MatchP(prod.Nombre(), filtro);
+            if (r) { i++; }
+            return r;
+        });
+        if (resultado.length === 1) {
+            self.SeleccionarPaciente(resultado[0]);
+            self.PacientesFiltrados(resultado);
+        } else {
+            self.PacientesFiltrados(resultado);
+        }
+    }).extend({ throttle: 250 });
+
+    self.SeleccionarPaciente = function (paciente) {
+        if (window.model.Models[3].Modificando() !== null) {
+            window.model.Models[3].Modificando().Paciente(paciente);
+        }
     }
 }
 
@@ -280,8 +336,10 @@ function viewModel() {
 }
 
 $(document).ready(function () {
+    $.ajaxSetup({ cache: false });
     window.model = new viewModel();
     ko.applyBindings(window.model);
+
 });
 
 function validarCampos() {
@@ -291,12 +349,7 @@ function validarCampos() {
 }
 
 function MensajeError(string) {
-    $('#alertContainer').html(`<div class="alert alert-danger alert-dismissible fade show" id="alertError" role="alert">
-        <strong>Error: </strong> <span id="mensajeError">` + string + `</span>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>`);
+    $('#alertContainer').html('<div class="alert alert-danger alert-dismissible fade show" id="alertError" role="alert"><strong>Error: </strong> <span id="mensajeError">' + string + '</span><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
 }
 
 function Guardar(callback, url, entidad) {
@@ -318,4 +371,9 @@ function Borrar(callback, url) {
     $.post(url, { Id: self.Id }, callback).fail(function (xhr, textStatus, errorThrown) {
         MensajeError(xhr.responseText);
     });
+}
+
+function MatchP(string, filtro) {
+
+    return filtro != undefined && string.indexOf(filtro) >= 0;
 }
