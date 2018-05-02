@@ -10,8 +10,8 @@ namespace Dominio.Entidades
     {
         [Key]
         public int Id { get; set; }
-        public short Mes { get; set; }
-        public Estado Estado { get; set; }
+        public DateTime? Fecha { get; set; }
+        public EstadoVisita Estado { get; set; }
         public Profesional ProfesionalEfectivo { get; set; }
     }
 }

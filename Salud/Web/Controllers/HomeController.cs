@@ -1,4 +1,5 @@
 ﻿using Dominio.Entidades;
+using Dominio.Enum;
 using Dominio.Helper;
 using Repositorio;
 using System;
@@ -41,8 +42,16 @@ namespace Web.Controllers
 
         public JsonResult ListarPrestaciones(string filtro = null)
         {
-            return Json(Repositorio.Listar<Prestacion>(new List<Expression<Func<Prestacion, object>>> { x => x.Zona, x => x.Paciente, x => x.Profesional, x => x.Visitas.Select(y => y.ProfesionalEfectivo) }, x => (filtro == "" || filtro == null || x.Paciente.Nombre.Contains(filtro)) ), JsonRequestBehavior.AllowGet);
+
+            var p = Repositorio.Listar<Prestacion>(new List<Expression<Func<Prestacion, object>>> { x => x.Zona, x => x.Paciente, x => x.Profesional, x => x.Visitas.Select(y => y.ProfesionalEfectivo) }, x => (filtro == "" || filtro == null || x.Paciente.Nombre.Contains(filtro)));
+            return Json(p, JsonRequestBehavior.AllowGet);
         }
+
+        //public JsonResult ListarVisitas(string filtro = null)
+        //{
+        //    var p = Repositorio.Listar<Prestacion>(new List<Expression<Func<Prestacion, object>>> { x => x.Zona, x => x.Paciente, x => x.Profesional }, x => (filtro == "" || filtro == null || x.Paciente.Nombre.Contains(filtro)));
+        //    return Json(p, JsonRequestBehavior.AllowGet);
+        //}
 
         public int CrearPaciente(Paciente paciente)
         {
@@ -82,7 +91,7 @@ namespace Web.Controllers
             throw new Exception("Ya existe un Profesional con los datos ingresados");
         }
 
-        public int CrearEmpresa(Empresa empresa)
+        public JsonResult CrearEmpresa(Empresa empresa)
         {
             if (!Repositorio.Existe<Empresa>(x => (x.Cuit == empresa.Cuit || x.Nombre == empresa.Nombre) && x.Id != empresa.Id))
             {
@@ -94,39 +103,34 @@ namespace Web.Controllers
                 {
                     var empresadb = Repositorio.Obtener<Empresa>(new List<Expression<Func<Empresa, object>>> { x => x.Zonas },x => x.Id == empresa.Id);
                     empresadb.Actualizar(empresa);
+                    empresa = empresadb;
                 }
                 Repositorio.GuardarCambios();
-                return empresa.Id;
+                return Json(empresa, JsonRequestBehavior.AllowGet);
             }
             throw new Exception("Ya existe una empresa con los datos ingresados");
         }
 
-        public int CrearPrestacion(Prestacion prestacion)
+        public JsonResult CrearPrestacion(Prestacion prestacion)
         {
-            if(prestacion.Paciente != null)
-            {
-                prestacion.Paciente = Repositorio.Obtener<Paciente>(prestacion.Paciente.Id);
-            }
-            if (prestacion.Profesional != null)
-            {
-                prestacion.Profesional = Repositorio.Obtener<Profesional>(prestacion.Profesional.Id);
-            }
-            if (prestacion.Zona != null)
-            {
-                prestacion.Zona = Repositorio.Obtener<Zona>(prestacion.Zona.Id);
-            }
+            prestacion.Paciente = Repositorio.Obtener<Paciente>(prestacion.Paciente.Id);
+            prestacion.Profesional = Repositorio.Obtener<Profesional>(prestacion.Profesional.Id);
+            prestacion.Zona = Repositorio.Obtener<Zona>(prestacion.Zona.Id);
 
             if (prestacion.Id == 0)
             {
                 prestacion = Repositorio.Agregar<Prestacion>(prestacion);
+                ActualizarVisitas(prestacion);
             }
             else
             {
                 var empresadb = Repositorio.Obtener<Prestacion>(new List<Expression<Func<Prestacion, object>>> { x => x.Zona, x => x.Profesional, x => x.Visitas.Select(y => y.ProfesionalEfectivo) }, x => x.Id == prestacion.Id);
                 empresadb.Actualizar(prestacion);
+                ActualizarVisitas(empresadb);
+                prestacion = empresadb;
             }
             Repositorio.GuardarCambios();
-            return prestacion.Id;
+            return Json(prestacion, JsonRequestBehavior.AllowGet);
         }
 
         public void EliminarEmpresa(int id)
@@ -178,6 +182,29 @@ namespace Web.Controllers
             catch (Exception e)
             {
                 throw new Exception("Error al borrar la entidad: " + e.Message);
+            }
+        }
+
+        private void ActualizarVisitas(Prestacion p)
+        {
+            if(p.Visitas == null)
+            {
+                p.Visitas = new List<Visita>();
+            }
+            if (p.Cantidad > p.Visitas.Count)
+            {
+                for(var i = 0; i < (p.Cantidad - p.Visitas.Count); i++)
+                {
+                    Repositorio.Agregar<Visita>(new Visita { Estado = EstadoVisita.Pendiente, Fecha = null, ProfesionalEfectivo = p.Profesional});
+                }
+            }
+            if (p.Cantidad < p.Visitas.Count)
+            {
+                for (var i = 0; i < (p.Visitas.Count - p.Cantidad); i++)
+                {
+                    var elemento = p.Visitas.Last();
+                    Repositorio.Remover<Visita>(elemento);
+                }
             }
         }
     }

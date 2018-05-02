@@ -25,46 +25,68 @@
 
 
     <div class="row">
-        <div class="col-lg-3 col-md-6  col-sm-12" data-bind="with: Models[3]">
+        <div class="col-lg-2 col-md-4  col-sm-12" data-bind="with: Models[3]">
             <button type="button" class="btn card text-white bg-warning mb-3" style="width:100%" data-bind="click: Listar">
                 <div @*class="card-body"*@>
-                    <h3 class="card-title">
-                        <span class="fa fa-2x fa-ambulance"></span>
+                    <h5 class="card-title" style="margin-bottom:0">
+                        <span class="fa fa-1x fa-ambulance"></span>
                         Prestaciones
-                    </h3>
+                    </h5>
                     @*<p class="card-text">Activos: 20</p>*@
                 </div>
             </button>
         </div>
-        <div class="col-lg-3 col-md-6 col-sm-12" data-bind="with: Models[0]">
+        <div class="col-lg-2 col-md-4  col-sm-12" @*data-bind="with: Models[2]"*@>
+            <button type="button" class="btn card text-white bg-success mb-3" style="width:100%" @*data-bind="click: Listar"*@>
+                <div @*class="card-body"*@>
+                    <h5 class="card-title" style="margin-bottom:0">
+                        <span class="fa fa-1x fa-calendar-check"></span>
+                        Visitas
+                    </h5>
+                    @*<p class="card-text">Activos: 20</p>*@
+                </div>
+            </button>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-12" data-bind="with: Models[0]">
             <button type="button" class="btn card text-white bg-primary mb-3" style="width:100%" data-bind="click: Listar">
                 <div @*class="card-body"*@>
-                    <h3 class="card-title">
-                        <span class="fa fa-2x fa-address-book"></span>
+                    <h5 class="card-title" style="margin-bottom:0">
+                        <span class="fa fa-1x fa-address-book"></span>
                         Pacientes
-                    </h3>
+                    </h5>
                     @*<p class="card-text">Activos: 20</p>*@
                 </div>
             </button>
         </div>
-        <div class="col-lg-3 col-md-6  col-sm-12" data-bind="with: Models[1]">
+        <div class="col-lg-2 col-md-4  col-sm-12" data-bind="with: Models[1]">
             <button type="button" class="btn card text-white bg-info mb-3" style="width:100%" data-bind="click: Listar">
                 <div @*class="card-body"*@>
-                    <h3 class="card-title">
-                        <span class="fa fa-2x fa-user-md"></span>
+                    <h5 class="card-title" style="margin-bottom:0">
+                        <span class="fa fa-1x fa-user-md"></span>
                         Profesionales
-                    </h3>
+                    </h5>
                     @*<p class="card-text">Activos: 20</p>*@
                 </div>
             </button>
         </div>
-        <div class="col-lg-3 col-md-6  col-sm-12" data-bind="with: Models[2]">
-            <button type="button" class="btn card text-white bg-success mb-3" style="width:100%" data-bind="click: Listar">
+        <div class="col-lg-2 col-md-4  col-sm-12" data-bind="with: Models[2]">
+            <button type="button" class="btn card text-white bg-danger mb-3" style="width:100%" data-bind="click: Listar">
                 <div @*class="card-body"*@>
-                    <h3 class="card-title">
-                        <span class="fa fa-2x fa-building"></span>
+                    <h5 class="card-title" style="margin-bottom:0">
+                        <span class="fa fa-1x fa-building"></span>
                         Empresas
-                    </h3>
+                    </h5>
+                    @*<p class="card-text">Activos: 20</p>*@
+                </div>
+            </button>
+        </div>
+        <div class="col-lg-2 col-md-4  col-sm-12" @*data-bind="with: Models[2]"*@>
+            <button type="button" class="btn card text-white bg-dark mb-3" style="width:100%" @*data-bind="click: Listar"*@>
+                <div @*class="card-body"*@>
+                    <h5 class="card-title" style="margin-bottom:0">
+                        <span class="fa fa-1x fa-book"></span>
+                        Reportes
+                    </h5>
                     @*<p class="card-text">Activos: 20</p>*@
                 </div>
             </button>

@@ -14,5 +14,6 @@ namespace Dominio.Entidades
         public string Telefono { get; set; }
         public string Contacto { get; set; }
         public string ContactoTelefono { get; set; }
+        public string Edad { get; set; }
     }
 }

@@ -23,5 +23,7 @@ namespace Dominio.Entidades
         public decimal PrecioEnferemeria { get; set; }
         public decimal PrecioGuardia { get; set; }
         public decimal PrecioCuidador { get; set; }
+
+        public bool Activo { get; set; }
     }
 }

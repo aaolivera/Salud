@@ -64,11 +64,14 @@ namespace Dominio.Helper
             empresadb.Fin = prestacion.Fin;
             empresadb.Cantidad = prestacion.Cantidad;
             empresadb.Visitas = empresadb.Visitas?.Where(x => prestacion.Visitas.Any(y => y.Id == x.Id)).ToList() ?? new List<Visita>(); ;
-            foreach (var visita in prestacion.Visitas)
+            if(prestacion.Visitas != null)
             {
-                if (!empresadb.Visitas.Any(y => y.Id == visita.Id))
+                foreach (var visita in prestacion.Visitas)
                 {
-                    empresadb.Visitas.Add(visita);
+                    if (!empresadb.Visitas.Any(y => y.Id == visita.Id))
+                    {
+                        empresadb.Visitas.Add(visita);
+                    }
                 }
             }
         }
