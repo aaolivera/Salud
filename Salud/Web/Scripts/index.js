@@ -41,9 +41,9 @@ function Prestacion(datos) {
     
     if (datos !== undefined) {
         self.Id = ko.observable(datos.Id);
-        self.Zona = ko.observable(ko.utils.arrayFirst(self.ModalPrestacion.Zonas(), function (item) { return datos.Zona.Id === item.Id(); }));
-        self.Profesional = ko.observable(ko.utils.arrayFirst(window.model.Models[1].Lista(), function (item) { return datos.Profesional.Id === item.Id(); }));
-        self.Paciente = ko.observable(ko.utils.arrayFirst(window.model.Models[0].Lista(), function (item) { return datos.Paciente.Id === item.Id(); }));
+        self.Zona = ko.observable(ko.utils.arrayFirst(self.ModalPrestacion.Zonas(), function (item) { return datos.Zona.Id === item.Id; }));
+        self.Profesional = ko.observable(ko.utils.arrayFirst(window.model.Models[1].Lista(), function (item) { return datos.Profesional.Id === item.Id; }));
+        self.Paciente = ko.observable(ko.utils.arrayFirst(window.model.Models[0].Lista(), function (item) { return datos.Paciente.Id === item.Id; }));
         self.Inicio = ko.observable(moment(datos.Inicio).format("DD/MM/YYYY"));
         self.Fin = ko.observable(moment(datos.Fin).format("DD/MM/YYYY"));
         self.Cantidad = ko.observable(datos.Cantidad);
@@ -58,7 +58,7 @@ function Prestacion(datos) {
         //
 
         self.ModalPrestacion.SetTipoProfesional(self.Profesional());
-        self.ModalPrestacion.PacienteEscrito(self.Paciente().Nombre());
+        self.ModalPrestacion.PacienteEscrito(self.Paciente().Nombre);
     } else {
         self.Id = ko.observable(0);
         self.Zona = ko.observable();
@@ -72,7 +72,9 @@ function Prestacion(datos) {
     }
     
     self.Guardar = function (callback) {
-        Guardar(callback, urlCrearPrestacion, self);
+        var entidadPlana = toJS2(self);
+        entidadPlana.ModalPrestacion = null;
+        Guardar(callback, urlCrearPrestacion, toJS2(entidadPlana));
     }
 
     self.Borrar = function (callback) {
@@ -95,7 +97,10 @@ function ModalPrestacion() {
     self.Zonas = ko.pureComputed(function () {
         var zonas = [];
         ko.utils.arrayForEach(window.model.Models[2].Lista(), function (entry) {
-            zonas.push.apply(zonas, entry.Zonas());
+            ko.utils.arrayForEach(entry.Zonas, function (z) {
+                z.EmpresaNombre = entry.Nombre;
+            });
+            zonas.push.apply(zonas, entry.Zonas);
         });
         return zonas;
     });
@@ -108,10 +113,10 @@ function ModalPrestacion() {
             return [];
         } else {
             return ko.utils.arrayFilter(window.model.Models[1].Lista(), function (prod) {
-                return self.TipoProfesional() === 'Kinesiologia' && prod.PrecioKinesiologia() > 0 ||
-                    self.TipoProfesional() === 'Guardia' && prod.PrecioGuardia() > 0 ||
-                    self.TipoProfesional() === 'Enferemeria' && prod.PrecioEnferemeria() > 0 ||
-                    self.TipoProfesional() === 'Cuidador' && prod.PrecioCuidador() > 0
+                return self.TipoProfesional() === 'Kinesiologia' && prod.PrecioKinesiologia > 0 ||
+                    self.TipoProfesional() === 'Guardia' && prod.PrecioGuardia > 0 ||
+                    self.TipoProfesional() === 'Enferemeria' && prod.PrecioEnferemeria > 0 ||
+                    self.TipoProfesional() === 'Cuidador' && prod.PrecioCuidador > 0
             });
         }
     });
@@ -123,7 +128,7 @@ function ModalPrestacion() {
         var i = 0;
         var resultado = ko.utils.arrayFilter(window.model.Models[0].Lista(), function (prod) {
             if (i === 20) return false;
-            var r = MatchP(prod.Nombre(), filtro);
+            var r = MatchP(prod.Nombre, filtro) || MatchP('(' + prod.Dni + ') ' + prod.Apellido + ', ' + prod.Nombre, filtro);
             if (r) { i++; }
             return r;
         });
@@ -142,16 +147,16 @@ function ModalPrestacion() {
     }
 
     self.SetTipoProfesional = function (prod) {
-        if (prod.PrecioKinesiologia() > 0) {
+        if (prod.PrecioKinesiologia > 0) {
             self.TipoProfesional('Kinesiologia');
         }
-        if (prod.PrecioGuardia() > 0) {
+        if (prod.PrecioGuardia > 0) {
             self.TipoProfesional('Guardia');
         }
-        if (prod.PrecioEnferemeria() > 0) {
+        if (prod.PrecioEnferemeria > 0) {
             self.TipoProfesional('Enferemeria');
         }
-        if (prod.PrecioCuidador() > 0) {
+        if (prod.PrecioCuidador > 0) {
             self.TipoProfesional('Cuidador');
         }
     }
@@ -307,11 +312,7 @@ function GenericListViewModel(viewModel, urlListar, entidad) {
         mostrar();
         if (self.Cargando()) {
             $.getJSON(urlListar, { filtro: self.Filtro()}, function (data) {
-                temp = [];
-                data.forEach(function (entry) {
-                    temp.push(new entidad(entry));
-                });
-                self.Lista(temp);
+                self.Lista(data);
                 self.Cargando(false);
             });
         }
@@ -328,14 +329,16 @@ function GenericListViewModel(viewModel, urlListar, entidad) {
     }
     self.MostrarEditar = function (editando) {
         ocultar();
-        self.Modificando(editando);
+        self.Modificando(new entidad(editando));
     }
     self.Crear = function () {
         if (validarCampos()) {
             self.Modificando().Guardar(
                 function (callback) {
                     self.Modificando().Actualizar(callback);
-                    self.Lista.push(self.Modificando());
+                    var obj = toJS2(self.Modificando());
+                    //aca pushear item sin observables
+                    self.Lista.push(obj);
                     self.Modificando(null);
                     mostrar();
                 }
@@ -346,6 +349,7 @@ function GenericListViewModel(viewModel, urlListar, entidad) {
         if (validarCampos()) {
             self.Modificando().Guardar(
                 function (callback) {
+                    //aca actualiar item de self.Listas
                     self.Modificando().Actualizar(callback);
                     self.Modificando(null);
                     mostrar();
@@ -431,4 +435,24 @@ function MatchP(string, filtro) {
 
     return filtro !== undefined && string.toLowerCase().indexOf(filtro.toLowerCase()) >= 0;
 }
-    
+
+
+/* Use this serializer function along with ko.toJS to produce clean JSON objects. */
+function toJS2(model) {
+    return JSON.parse(ko.toJSON(model, modelSerializer));
+}
+
+function modelSerializer(key, value) {
+    if (isSerializable(value))
+        return value;
+    else
+        return;
+}
+
+function isSerializable(object) {
+    if (object == null) return true;
+    if (typeof object == 'function') return false;
+    if (object.mappedProperties != null) return false;
+
+    return true;
+}

@@ -9,7 +9,7 @@
                         <input class="form-control form-control-sm" id="pacientes" data-bind="value: ModalPrestacion.PacienteEscrito, valueUpdate: 'afterkeydown'" placeholder="(nombre)" type="text" list="pacientesList" />
                         <datalist id="pacientesList">
                             <!-- ko foreach: ModalPrestacion.PacientesFiltrados -->
-                            <option data-bind="value: '(' + Dni()  + ') ' + Apellido() + ', '+ Nombre(), attr: {'data-id' : Id }"></option>
+                            <option data-bind="value: '(' + Dni  + ') ' + Apellido + ', '+ Nombre, attr: {'data-id' : Id }"></option>
                             <!-- /ko -->
                         </datalist>
 

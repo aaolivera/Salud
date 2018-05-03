@@ -63,17 +63,6 @@ namespace Dominio.Helper
             empresadb.Inicio = prestacion.Inicio;
             empresadb.Fin = prestacion.Fin;
             empresadb.Cantidad = prestacion.Cantidad;
-            empresadb.Visitas = empresadb.Visitas?.Where(x => prestacion.Visitas.Any(y => y.Id == x.Id)).ToList() ?? new List<Visita>(); ;
-            if(prestacion.Visitas != null)
-            {
-                foreach (var visita in prestacion.Visitas)
-                {
-                    if (!empresadb.Visitas.Any(y => y.Id == visita.Id))
-                    {
-                        empresadb.Visitas.Add(visita);
-                    }
-                }
-            }
         }
     }
 }

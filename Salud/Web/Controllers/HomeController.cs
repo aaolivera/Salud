@@ -193,16 +193,19 @@ namespace Web.Controllers
             }
             if (p.Cantidad > p.Visitas.Count)
             {
-                for(var i = 0; i < (p.Cantidad - p.Visitas.Count); i++)
+                var c = (p.Cantidad - p.Visitas.Count);
+                for (var i = 0; i < c; i++)
                 {
-                    Repositorio.Agregar<Visita>(new Visita { Estado = EstadoVisita.Pendiente, Fecha = null, ProfesionalEfectivo = p.Profesional});
+                    p.Visitas.Add(new Visita { Estado = EstadoVisita.Pendiente, Fecha = null, ProfesionalEfectivo = p.Profesional });
                 }
             }
-            if (p.Cantidad < p.Visitas.Count)
+            else if (p.Cantidad < p.Visitas.Count)
             {
-                for (var i = 0; i < (p.Visitas.Count - p.Cantidad); i++)
+                var c = (p.Visitas.Count - p.Cantidad);
+                for (var i = 0; i < c; i++)
                 {
                     var elemento = p.Visitas.Last();
+                    p.Visitas.Remove(elemento);
                     Repositorio.Remover<Visita>(elemento);
                 }
             }
