@@ -1,5 +1,5 @@
 ﻿<div class="col-12" data-bind="visible: Visible">
-    <div class="card text-white bg-info mb-3" style="width:100%">
+    <div class="card text-white bg-warning mb-3" style="width:100%">
         <div class="card-body">
             <div class="row" data-bind="visible: Cargando">
                 <div class="col-3 offset-4">
@@ -12,8 +12,8 @@
             <div class="row" data-bind="visible: !Cargando()">
                 <nav class="navbar" style="padding-left: 0px;">
                     <form class="form-inline">
-                        <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search" data-bind="value: Filtro">
-                        <button class="btn  my-2 my-sm-0 mr-sm-2" type="button" data-bind="click: Recargar">Buscar</button>
+                        <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">
+                        <button class="btn  my-2 my-sm-0 mr-sm-2" type="button">Buscar</button>
                         <button class="btn  my-2 my-sm-0 mr-sm-2" type="button" data-bind="click: MostrarCrear"><span class="fa fa-plus-circle"></span></button>
                         <button class="btn  my-2 my-sm-0" type="button" data-bind="click: Recargar"><span class="fa fa-retweet"></span></button>
                     </form>
@@ -22,10 +22,10 @@
                     <thead>
                         <tr class="text-white bg-dark">
                             <th scope="col">#</th>
-                            <th scope="col">Nombre</th>
-                            <th scope="col">Apellido</th>
+                            <th scope="col">Profesional</th>
+                            <th scope="col">Paciente</th>
                             <th scope="col">Direccion</th>
-                            <th scope="col">Telefono</th>
+                            <th scope="col">Estado</th>
                         </tr>
                     </thead>
                     <tbody data-bind="foreach: Lista">
@@ -34,10 +34,10 @@
                                 <button class="btn btn-icn fa fa-edit" type="button" data-bind="click: function (){$parent.MostrarEditar($data);}"></button>
                                 <button class="btn btn-icn fa fa-trash" type="button" data-bind="click: function (){$parent.Borrar($data);}"></button>
                             </th>
-                            <td data-bind="text: Nombre"></td>
-                            <td data-bind="text: Apellido"></td>
-                            <td data-bind="text: Direccion"></td>
-                            <td data-bind="text: Telefono"></td>
+                            <td data-bind="text: Profesional.Apellido + ', ' + Profesional.Nombre"></td>
+                            <td data-bind="text: Paciente.Apellido + ', ' + Paciente.Nombre"></td>
+                            <td data-bind="text: Paciente.Direccion"></td>
+                            <td data-bind="text: Estado"></td>
                         </tr>
                     </tbody>
                 </table>
@@ -45,4 +45,4 @@
         </div>
     </div>
 </div>
-@Html.Partial("ProfesionalesCrearModificar")
+@Html.Partial("~/Views/Prestacion/CrearModificar.cshtml")

@@ -159,6 +159,11 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\PacienteController.cs" />
+    <Compile Include="Controllers\VisitaController.cs" />
+    <Compile Include="Controllers\ProfesionalController.cs" />
+    <Compile Include="Controllers\EmpresaController.cs" />
+    <Compile Include="Controllers\PrestacionController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -256,14 +261,15 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
-    <Content Include="Views\Home\Empresas.cshtml" />
-    <Content Include="Views\Home\Pacientes.cshtml" />
-    <Content Include="Views\Home\Profesionales.cshtml" />
-    <Content Include="Views\Home\EmpresasCrearModificar.cshtml" />
-    <Content Include="Views\Home\ProfesionalesCrearModificar.cshtml" />
-    <Content Include="Views\Home\PacientesCrearModificar.cshtml" />
-    <Content Include="Views\Home\Prestaciones.cshtml" />
-    <Content Include="Views\Home\PrestacionesCrearModificar.cshtml" />
+    <Content Include="Views\Empresa\Index.cshtml" />
+    <Content Include="Views\Paciente\Index.cshtml" />
+    <Content Include="Views\Profesional\Index.cshtml" />
+    <Content Include="Views\Empresa\CrearModificar.cshtml" />
+    <Content Include="Views\Profesional\CrearModificar.cshtml" />
+    <Content Include="Views\Paciente\CrearModificar.cshtml" />
+    <Content Include="Views\Prestacion\Index.cshtml" />
+    <Content Include="Views\Prestacion\CrearModificar.cshtml" />
+    <Content Include="Views\Visita\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

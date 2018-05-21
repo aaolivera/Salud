@@ -1,5 +1,5 @@
 ﻿<div class="col-12" data-bind="visible: Visible">
-    <div class="card text-white bg-warning mb-3" style="width:100%">
+    <div class="card text-white bg-primary mb-3" style="width:100%">
         <div class="card-body">
             <div class="row" data-bind="visible: Cargando">
                 <div class="col-3 offset-4">
@@ -22,9 +22,10 @@
                     <thead>
                         <tr class="text-white bg-dark">
                             <th scope="col">#</th>
-                            <th scope="col">Profesional</th>
-                            <th scope="col">Paciente</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Apellido</th>
                             <th scope="col">Direccion</th>
+                            <th scope="col">Telefono</th>
                         </tr>
                     </thead>
                     <tbody data-bind="foreach: Lista">
@@ -33,9 +34,10 @@
                                 <button class="btn btn-icn fa fa-edit" type="button" data-bind="click: function (){$parent.MostrarEditar($data);}"></button>
                                 <button class="btn btn-icn fa fa-trash" type="button" data-bind="click: function (){$parent.Borrar($data);}"></button>
                             </th>
-                            <td data-bind="text: Profesional.Apellido + ', ' + Profesional.Nombre"></td>
-                            <td data-bind="text: Paciente.Apellido + ', ' + Paciente.Nombre"></td>
-                            <td data-bind="text: Paciente.Direccion"></td>
+                            <td data-bind="text: Nombre"></td>
+                            <td data-bind="text: Apellido"></td>
+                            <td data-bind="text: Direccion"></td>
+                            <td data-bind="text: Telefono"></td>
                         </tr>
                     </tbody>
                 </table>
@@ -43,4 +45,4 @@
         </div>
     </div>
 </div>
-@Html.Partial("PrestacionesCrearModificar")
+@Html.Partial("~/Views/Paciente/CrearModificar.cshtml")

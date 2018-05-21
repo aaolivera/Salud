@@ -92,6 +92,18 @@ function Prestacion(datos) {
     }
 }
 
+function Visita(datos, prestacion) {
+    var self = this;
+    self.Id = ko.observable(datos.Id);
+    self.Fecha = ko.observable(moment(datos.Fecha).format("DD/MM/YYYY"));
+    self.Estado = ko.observable(datos.Estado);
+    self.ProfesionalEfectivo = ko.observable(ko.utils.arrayFirst(window.model.Models[1].Lista(), function (item) { return datos.ProfesionalEfectivo.Id === item.Id; }));
+
+    self.Borrar = function () {
+        prestacion.Visitas.remove(self)
+    }
+}
+
 function ModalPrestacion() {
     self = this;
     self.Zonas = ko.pureComputed(function () {
@@ -146,6 +158,7 @@ function ModalPrestacion() {
         }
     }
 
+    //mal, si el prof seleccionado tiene dos profesiones, al volver a entrar no se por cual lo traje
     self.SetTipoProfesional = function (prod) {
         if (prod.PrecioKinesiologia > 0) {
             self.TipoProfesional('Kinesiologia');
@@ -159,18 +172,6 @@ function ModalPrestacion() {
         if (prod.PrecioCuidador > 0) {
             self.TipoProfesional('Cuidador');
         }
-    }
-}
-
-function Visita(datos, prestacion) {
-    var self = this;
-    self.Id = ko.observable(datos.Id);
-    self.Fecha = ko.observable(datos.Fecha);
-    self.Estado = ko.observable(datos.Estado);
-    self.ProfesionalEfectivo = ko.observable(datos.ProfesionalEfectivo);
-
-    self.Borrar = function () {
-        prestacion.Visitas.remove(self)
     }
 }
 
@@ -302,24 +303,29 @@ function Zona(datos, empresa) {
     }
 }
 
-function GenericListViewModel(viewModel, urlListar, entidad) {
+function GenericListViewModel(viewModel, urlListar, entidad, fullObservable) {
     var self = this;
     self.Lista = ko.observableArray([]);
-    self.Cargando = ko.observable(true);
+    self.Cargando = ko.observable(false);
     self.Visible = ko.observable(false);
     self.Filtro = ko.observable('');
-    self.Listar = function () {
-        mostrar();
-        if (self.Cargando()) {
-            $.getJSON(urlListar, { filtro: self.Filtro()}, function (data) {
-                self.Lista(data);
+
+    self.Recargar = function () {
+        if (!self.Cargando()) {
+            self.Cargando(true);
+            $.getJSON(urlListar, { filtro: self.Filtro() }, function (data) {
+                if (fullObservable === true) {
+                    temp = [];
+                    data.forEach(function (entry) {
+                        temp.push(new entidad(entry));
+                    });
+                    self.Lista(temp);
+                } else {
+                    self.Lista(data);
+                }
                 self.Cargando(false);
             });
         }
-    }
-    self.Recargar = function () {
-        self.Cargando(true);
-        self.Listar();
     }
 
     self.Modificando = ko.observable(null);
@@ -367,7 +373,7 @@ function GenericListViewModel(viewModel, urlListar, entidad) {
         mostrar();
     }
     
-    function mostrar() {
+    self.Mostrar = function () {
         ocultar();
         self.Visible(true);
     }
@@ -385,12 +391,14 @@ function viewModel() {
         new GenericListViewModel(self, urllistarPacientes, Paciente),
         new GenericListViewModel(self, urllistarProfesionales, Profesional),
         new GenericListViewModel(self, urllistarEmpresas, Empresa),
-        new GenericListViewModel(self, urllistarPrestaciones, Prestacion)
+        new GenericListViewModel(self, urllistarPrestaciones, Prestacion),
+        new GenericListViewModel(self, urllistarVisitas, Prestacion, true)
     ]; 
     self.Models[0].Recargar();
     self.Models[1].Recargar();
     self.Models[2].Recargar();
     self.Models[3].Recargar();
+    //self.Models[4].Recargar();
 }
 
 $(document).ready(function () {

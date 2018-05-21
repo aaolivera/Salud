@@ -126,7 +126,7 @@ namespace Web.Controllers
             {
                 var empresadb = Repositorio.Obtener<Prestacion>(new List<Expression<Func<Prestacion, object>>> { x => x.Zona, x => x.Profesional, x => x.Visitas.Select(y => y.ProfesionalEfectivo) }, x => x.Id == prestacion.Id);
                 empresadb.Actualizar(prestacion);
-                ActualizarVisitas(empresadb);
+                ActualizarVisitas(empresadb, prestacion);
                 prestacion = empresadb;
             }
             Repositorio.GuardarCambios();
@@ -185,7 +185,7 @@ namespace Web.Controllers
             }
         }
 
-        private void ActualizarVisitas(Prestacion p)
+        private void ActualizarVisitas(Prestacion p, Prestacion pDto = null)
         {
             if(p.Visitas == null)
             {
@@ -209,6 +209,20 @@ namespace Web.Controllers
                     Repositorio.Remover<Visita>(elemento);
                 }
             }
+            if(pDto != null)
+            {
+                foreach(var v in p.Visitas)
+                {
+                    var vDto = pDto.Visitas.FirstOrDefault(x => x.Id == v.Id);
+                    if(vDto != null)
+                    {
+                        v.ProfesionalEfectivo = Repositorio.Obtener<Profesional>(vDto.ProfesionalEfectivo.Id);
+                        v.Estado = vDto.Estado;
+                        v.Fecha = vDto.Fecha;
+                    }
+                    
+                }
+            }            
         }
     }
 }

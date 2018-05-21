@@ -1,0 +1,70 @@
+﻿<div class="col-12" data-bind="visible: Visible">
+    <div class="card text-white bg-dark mb-3" style="width:100%">
+        <div class="card-body">
+            <div class="row" data-bind="visible: Cargando">
+                <div class="col-3 offset-4">
+                    <h3 class="card-title">
+                        <span class="fa fa-2x fa-spinner"></span>
+                        Cargando
+                    </h3>
+                </div>
+            </div>
+            <div data-bind="visible: !Cargando()">
+                <nav class="navbar" style="padding-left: 0px;">
+                    <form class="form-inline">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">
+                        <button class="btn  my-2 my-sm-0 mr-sm-2" type="button">Buscar</button>
+                        <button class="btn  my-2 my-sm-0" type="button" data-bind="click: Recargar"><span class="fa fa-retweet"></span></button>
+                    </form>
+                </nav>
+                <!-- ko foreach: Lista -->
+                <div class="alert alert-warning" role="alert" style="padding-top:0">
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <label class="col-form-label col-form-label-sm">Zona</label>
+                            <b data-bind="text: Zona().Nombre"></b>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-form-label col-form-label-sm">Paciente</label>
+                            <b data-bind="text: Paciente().Apellido + ', ' + Paciente().Nombre"></b>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-form-label col-form-label-sm">Profesional</label>
+                            <b data-bind="text: Profesional().Apellido + ', ' + Profesional().Nombre"></b>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-form-label col-form-label-sm">Desde</label>
+                            <b data-bind="text: moment(Inicio()).format('DD/MM/YYYY')"></b>
+                            <label class="col-form-label col-form-label-sm">Hasta</label>
+                            <b data-bind="text: moment(Fin()).format('DD/MM/YYYY')"></b>
+                        </div>
+                    </div>
+
+                    <table class="table table-hover table-sm ">
+                        <thead>
+                            <tr class="text-white bg-dark">
+                                <th scope="col">Profesional</th>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody data-bind="foreach: Visitas">
+                            <tr>
+                                <td>
+                                    <select class="form-control form-control-sm" data-bind="options: $parent.ModalPrestacion.Profesionales, optionsText: 'Nombre', value: ProfesionalEfectivo, optionsCaption: '(profesional)'"></select>
+                                    <div class="invalid-feedback">
+                                        El dato es obligatorio
+                                    </div>
+                                </td>
+                                <td data-bind="text: moment(Fecha()).format('DD/MM/YYYY')"></td>
+                                <td data-bind="text: Estado"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                <!-- /ko -->
+            </div>
+        </div>
+    </div>
+</div>

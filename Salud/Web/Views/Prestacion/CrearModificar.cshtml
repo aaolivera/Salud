@@ -3,7 +3,14 @@
         <div class="card-body">
             <form class="needs-validation" id="myForm" novalidate>
                 <div class="form-row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
+                        <label class="col-form-label col-form-label-sm">Zona</label>
+                        <select class="form-control form-control-sm" data-bind="options: ModalPrestacion.Zonas, optionsText: function(item) { return '(' + item.EmpresaNombre + ') ' + ko.unwrap(item.Nombre); }, value: Zona, optionsCaption: '(zona)'"></select>
+                        <div class="invalid-feedback">
+                            El dato es obligatorio
+                        </div>
+                    </div>
+                    <div class="col-md-8">
                         <label class="col-form-label col-form-label-sm">Paciente</label>
 
                         <input class="form-control form-control-sm" id="pacientes" data-bind="value: ModalPrestacion.PacienteEscrito, valueUpdate: 'afterkeydown'" placeholder="(nombre)" type="text" list="pacientesList" />
@@ -17,13 +24,7 @@
                             El dato es obligatorio
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <label class="col-form-label col-form-label-sm">Zona</label>
-                        <select class="form-control form-control-sm" data-bind="options: ModalPrestacion.Zonas, optionsText: function(item) { return '(' + item.EmpresaNombre + ') ' + ko.unwrap(item.Nombre); }, value: Zona, optionsCaption: '(zona)'"></select>
-                        <div class="invalid-feedback">
-                            El dato es obligatorio
-                        </div>
-                    </div>
+
                 </div>
                 <div class="form-row">
                     <div class="col-md-4">
@@ -63,7 +64,7 @@
                             El dato es obligatorio
                         </div>
                     </div>
-                </div>                
+                </div>
                 <div class="form-row mx-auto">
                     <div class="col-md-2 offset-4">
                         <button class="btn btn-primary" style="width:100%" data-bind="click: $root.Models[3].Crear, visible: Id() == 0">Crear</button>

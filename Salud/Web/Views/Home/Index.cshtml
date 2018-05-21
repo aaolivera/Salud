@@ -4,20 +4,21 @@
 @section scripts
 {
     <script>
-        var urllistarPacientes = "@Url.Action("ListarPacientes")";
-        var urllistarProfesionales = "@Url.Action("ListarProfesionales")";
-        var urllistarEmpresas = "@Url.Action("ListarEmpresas")";
-        var urllistarPrestaciones = "@Url.Action("ListarPrestaciones")";
+        var urllistarPacientes = "@Url.Action("Listar","Paciente")";
+        var urllistarProfesionales = "@Url.Action("Listar", "Profesional")";
+        var urllistarEmpresas = "@Url.Action("Listar", "Empresa")";
+        var urllistarPrestaciones = "@Url.Action("Listar", "Prestacion")";
+        var urllistarVisitas = "@Url.Action("Listar", "Visita")";
 
-        var urlCrearPaciente = "@Url.Action("CrearPaciente")";
-        var urlCrearEmpresa = "@Url.Action("CrearEmpresa")";
-        var urlCrearProfesional = "@Url.Action("CrearProfesional")";
-        var urlCrearPrestacion = "@Url.Action("CrearPrestacion")";
+        var urlCrearPaciente = "@Url.Action("Crear","Paciente")";
+        var urlCrearEmpresa = "@Url.Action("Crear","Empresa")";
+        var urlCrearProfesional = "@Url.Action("Crear","Profesional")";
+        var urlCrearPrestacion = "@Url.Action("Crear","Prestacion")";
 
-        var urlEliminarPaciente = "@Url.Action("EliminarPaciente")";
-        var urlEliminarEmpresa = "@Url.Action("EliminarEmpresa")";
-        var urlEliminarProfesional = "@Url.Action("EliminarProfesional")";
-        var urlEliminarPrestacion = "@Url.Action("EliminarPrestacion")";
+        var urlEliminarPaciente = "@Url.Action("Eliminar","Paciente")";
+        var urlEliminarEmpresa = "@Url.Action("Eliminar","Empresa")";
+        var urlEliminarProfesional = "@Url.Action("Eliminar","Profesional")";
+        var urlEliminarPrestacion = "@Url.Action("Eliminar","Prestacion")";
     </script>
     <script src="~/Scripts/knockout-3.4.2.js"></script>
     <script src="~/Scripts/index.js"></script>
@@ -26,7 +27,7 @@
 
     <div class="row">
         <div class="col-lg-3 col-md-6  col-sm-12" data-bind="with: Models[3]">
-            <button type="button" class="btn card text-white bg-warning mb-3" style="width:100%" data-bind="click: Listar">
+            <button type="button" class="btn card text-white bg-warning mb-3" style="width:100%" data-bind="click: Mostrar">
                 <div @*class="card-body"*@>
                     <h5 class="card-title" style="margin-bottom:0">
                         <span class="fa fa-1x fa-ambulance"></span>
@@ -36,8 +37,19 @@
                 </div>
             </button>
         </div>
+        <div class="col-lg-3 col-md-6  col-sm-12" data-bind="with: Models[4]">
+            <button type="button" class="btn card text-white bg-dark mb-3" style="width:100%" data-bind="click: Mostrar">
+                <div @*class="card-body"*@>
+                    <h5 class="card-title" style="margin-bottom:0">
+                        <span class="fa fa-1x fa-ambulance"></span>
+                        Visitas
+                    </h5>
+                    @*<p class="card-text">Activos: 20</p>*@
+                </div>
+            </button>
+        </div>
         <div class="col-lg-3 col-md-6 col-sm-12" data-bind="with: Models[0]">
-            <button type="button" class="btn card text-white bg-primary mb-3" style="width:100%" data-bind="click: Listar">
+            <button type="button" class="btn card text-white bg-primary mb-3" style="width:100%" data-bind="click: Mostrar">
                 <div @*class="card-body"*@>
                     <h5 class="card-title" style="margin-bottom:0">
                         <span class="fa fa-1x fa-address-book"></span>
@@ -48,7 +60,7 @@
             </button>
         </div>
         <div class="col-lg-3 col-md-6  col-sm-12" data-bind="with: Models[1]">
-            <button type="button" class="btn card text-white bg-info mb-3" style="width:100%" data-bind="click: Listar">
+            <button type="button" class="btn card text-white bg-info mb-3" style="width:100%" data-bind="click: Mostrar">
                 <div @*class="card-body"*@>
                     <h5 class="card-title" style="margin-bottom:0">
                         <span class="fa fa-1x fa-user-md"></span>
@@ -59,7 +71,7 @@
             </button>
         </div>
         <div class="col-lg-3 col-md-6  col-sm-12" data-bind="with: Models[2]">
-            <button type="button" class="btn card text-white bg-danger mb-3" style="width:100%" data-bind="click: Listar">
+            <button type="button" class="btn card text-white bg-danger mb-3" style="width:100%" data-bind="click: Mostrar">
                 <div @*class="card-body"*@>
                     <h5 class="card-title" style="margin-bottom:0">
                         <span class="fa fa-1x fa-building"></span>
@@ -76,14 +88,17 @@
 
 
 <div class="row" data-bind="with: Models[0]">
-    @Html.Partial("Pacientes")
+    @Html.Partial("~/Views/Paciente/Index.cshtml")
 </div>
 <div class="row" data-bind="with: Models[1]">
-    @Html.Partial("Profesionales")
+    @Html.Partial("~/Views/Profesional/Index.cshtml")
 </div>
 <div class="row" data-bind="with: Models[2]">
-    @Html.Partial("Empresas")
+    @Html.Partial("~/Views/Empresa/Index.cshtml")
 </div>
 <div class="row" data-bind="with: Models[3]">
-    @Html.Partial("Prestaciones")
+    @Html.Partial("~/Views/Prestacion/Index.cshtml")
+</div>
+<div class="row" data-bind="with: Models[4]">
+    @Html.Partial("~/Views/Visita/Index.cshtml")
 </div>
