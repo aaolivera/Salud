@@ -305,7 +305,13 @@ function Zona(datos, empresa) {
 
 function GenericListViewModel(viewModel, urlListar, entidad, fullObservable) {
     var self = this;
+    var mostrable = 150;
     self.Lista = ko.observableArray([]);
+    self.MostrarHasta = ko.observable(mostrable);
+    self.ListaMostrable = ko.computed(function () {
+        return self.Lista().slice(0, self.MostrarHasta());
+    });
+
     self.Cargando = ko.observable(false);
     self.Visible = ko.observable(false);
     self.Filtro = ko.observable('');
@@ -313,15 +319,17 @@ function GenericListViewModel(viewModel, urlListar, entidad, fullObservable) {
     self.Recargar = function () {
         if (!self.Cargando()) {
             self.Cargando(true);
-            $.getJSON(urlListar, { filtro: self.Filtro() }, function (data) {
+            $.getJSON(urlListar, function (data) {
                 if (fullObservable === true) {
                     temp = [];
                     data.forEach(function (entry) {
                         temp.push(new entidad(entry));
                     });
                     self.Lista(temp);
+                    self.MostrarHasta(mostrable);
                 } else {
                     self.Lista(data);
+                    self.MostrarHasta(mostrable);
                 }
                 self.Cargando(false);
             });
@@ -370,7 +378,7 @@ function GenericListViewModel(viewModel, urlListar, entidad, fullObservable) {
     }
     self.Cancelar = function () {
         self.Modificando(null);
-        mostrar();
+        self.Mostrar();
     }
     
     self.Mostrar = function () {
@@ -380,6 +388,7 @@ function GenericListViewModel(viewModel, urlListar, entidad, fullObservable) {
     function ocultar() {
         viewModel.Models.forEach(function (entry) {
             entry.Visible(false);
+            entry.MostrarHasta(mostrable);
             entry.Modificando(null);
         });
     }
@@ -405,7 +414,13 @@ $(document).ready(function () {
     $.ajaxSetup({ cache: false });
     window.model = new viewModel();
     ko.applyBindings(window.model);
-
+    $(window).scroll(function (data, event) {
+        window.model.Models.forEach(function (entry) {
+            if (entry.Visible()) {
+                entry.MostrarHasta(entry.MostrarHasta() + 50);
+            }
+        });
+    });
 });
 
 function validarCampos() {

@@ -1,4 +1,6 @@
-﻿<div class="col-12" data-bind="visible: Visible">
+﻿@using Dominio.Enum;
+
+<div class="col-12" data-bind="visible: Visible">
     <div class="card text-white bg-dark mb-3" style="width:100%">
         <div class="card-body">
             <div class="row" data-bind="visible: Cargando">
@@ -56,8 +58,20 @@
                                         El dato es obligatorio
                                     </div>
                                 </td>
-                                <td data-bind="text: moment(Fecha()).format('DD/MM/YYYY')"></td>
-                                <td data-bind="text: Estado"></td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" placeholder="(desde)" required data-bind="value: Fecha">
+                                    <div class="invalid-feedback">
+                                        El dato es obligatorio
+                                    </div>
+                                </td>
+                                <td>
+                                    <select class="form-control form-control-sm" data-bind="value: Estado, optionsCaption: '(tipo estado)'">
+                                        @Html.Raw(string.Join("",Enum.GetValues(typeof(EstadoVisita))
+                                             .Cast<EstadoVisita>()
+                                            .Select(r => $"<option value=\"{((int)r).ToString()}\">{r.ToString()}</option>") 
+                                            .ToArray()))
+                                    </select>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
